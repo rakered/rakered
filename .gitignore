@@ -1,0 +1,10 @@
+.db
+!.db/.gitkeep
+*.tsbuildinfo
+/packages/*/.coverage
+/packages/*/lib
+/packages/*/dist
+
+.coverage
+node_modules
+local

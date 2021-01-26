@@ -1,0 +1,22 @@
+{
+  "name": "mongod",
+  "scripts": {
+    "clean": "rimraf \"packages/**/dist\" \"packages/**/*.tsbuildinfo\"",
+    "start:db": "mongod --dbpath .db",
+    "test": "lerna run test",
+    "prepare": "npm run build",
+    "build": "tsc"
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "lerna": "3.22.1",
+    "prettier": "2.2.1",
+    "rimraf": "3.0.2",
+    "typescript": "4.1.3"
+  },
+  "workspaces": [
+    "./packages/*"
+  ]
+}

@@ -45,7 +45,7 @@ test('still allows for server side id generation', async () => {
   const updateOneResult = await col.updateOne(
     { name: 'john' },
     { $set: { name: 'john doe' } },
-    { upsert: true }
+    { upsert: true },
   );
 
   expect(typeof updateOneResult.upsertedId).not.toEqual('string');
@@ -53,7 +53,7 @@ test('still allows for server side id generation', async () => {
   const updateManyResult = await col.updateMany(
     { name: 'john' },
     { $set: { name: 'john doe' } },
-    { upsert: true }
+    { upsert: true },
   );
 
   expect(typeof updateManyResult.upsertedId).not.toEqual('string');
@@ -119,7 +119,7 @@ test('updateOne is augmented', async () => {
   const { insertedId } = await db.testCol.insertOne({ name: 'john' });
   const { modifiedCount } = await db.testCol.updateOne(
     { _id: insertedId },
-    { $set: { name: 'john doe' } }
+    { $set: { name: 'john doe' } },
   );
   expect(modifiedCount).toEqual(1);
 });
@@ -128,13 +128,13 @@ test('updateMany is augmented', async () => {
   const { insertedId } = await db.testCol.insertOne({ name: 'john' });
   const { modifiedCount } = await db.testCol.updateMany(
     { _id: insertedId },
-    { $set: { name: 'john doe' } }
+    { $set: { name: 'john doe' } },
   );
 
   const { upsertedId } = await db.testCol.updateMany(
     { name: 'update-many-upsert ' },
     { $set: { name: 'john doe' } },
-    { upsert: true }
+    { upsert: true },
   );
 
   expect(modifiedCount).toEqual(1);
@@ -145,7 +145,7 @@ test('updateOne.upsert is augmented', async () => {
   const { upsertedId } = await db.testCol.updateOne(
     { name: 'updateOne.upsert' },
     { $set: { name: 'updateOne.upsert-updated' } },
-    { upsert: true }
+    { upsert: true },
   );
 
   expect(typeof upsertedId._id).toEqual('string');
@@ -155,7 +155,7 @@ test('updateMany.upsert is augmented', async () => {
   const { upsertedId } = await db.testCol.updateMany(
     { _id: 'updateMany.upsert' },
     { $set: { name: 'updateOne.upsert-updated' } },
-    { upsert: true }
+    { upsert: true },
   );
 
   expect(typeof upsertedId._id).toEqual('string');

@@ -15,12 +15,12 @@ export type Options = MongoClientOptions;
 
 export function create(
   uri: string = process.env.MONGO_URL || 'mongodb://localhost:27017',
-  options?: Options
+  options?: Options,
 ): Db {
   let client: MongoClient;
   let db: Db;
 
-  let collections = {};
+  const collections = {};
   let instancePromise: Promise<Db>;
 
   function createPk({ collectionName }) {
@@ -37,7 +37,7 @@ export function create(
       useUnifiedTopology: true,
       pkFactory: { createPk },
     },
-    options
+    options,
   );
 
   // 21-01-21 13:43
@@ -84,7 +84,7 @@ export function create(
         collections[name] = getCollection({ name, getInstance });
         return collections[name];
       },
-    }
+    },
   ) as Db;
 }
 

@@ -39,18 +39,18 @@ export type Collection<TSchema> = Omit<
   pkPrefix?: string;
   find<T = TSchema>(
     query?: FilterQuery<TSchema>,
-    options?: FindOneOptions<T extends TSchema ? TSchema : T>
+    options?: FindOneOptions<T extends TSchema ? TSchema : T>,
   ): Promise<T[]>;
   aggregate<T = TSchema>(
-    pipeline?: object[],
-    options?: CollectionAggregationOptions
+    pipeline?: Record<string, unknown>,
+    options?: CollectionAggregationOptions,
   ): Promise<T[]>;
   listIndexes(options?: ListIndexOptions): Promise<IndexResult[]>;
   initializeOrderedBulkOp(
-    options?: CommonOptions
+    options?: CommonOptions,
   ): Promise<OrderedBulkOperation>;
   initializeUnorderedBulkOp(
-    options?: CommonOptions
+    options?: CommonOptions,
   ): Promise<UnorderedBulkOperation>;
 };
 
@@ -100,7 +100,7 @@ export function getCollection({ getInstance, name }) {
           return isCursor(res) ? wrapCursor(method, args, res) : res;
         };
       },
-    }
+    },
   );
 }
 
@@ -152,7 +152,7 @@ Collection.prototype.insertMany = async function insertMany(docs, options) {
     return _insertMany.apply(this, [docs, options]);
   }
 
-  for (let doc of docs) {
+  for (const doc of docs) {
     doc._id = doc._id || createPk(this);
   }
 
@@ -163,7 +163,7 @@ const _updateOne = Collection.prototype.updateOne;
 Collection.prototype.updateOne = async function updateOne(
   filter,
   update,
-  options: UpdateOneOptions = {}
+  options: UpdateOneOptions = {},
 ) {
   if (forceServerObjectId(this)) {
     return _updateOne.apply(this, [filter, update, options]);
@@ -181,7 +181,7 @@ const _updateMany = Collection.prototype.updateMany;
 Collection.prototype.updateMany = async function updateMany(
   filter,
   update,
-  options: UpdateOneOptions = {}
+  options: UpdateOneOptions = {},
 ) {
   if (forceServerObjectId(this)) {
     return _updateMany.apply(this, [filter, update, options]);

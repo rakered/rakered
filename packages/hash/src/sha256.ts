@@ -1,4 +1,4 @@
-const SHA256 = function(s) {
+const SHA256 = function (s) {
   const chrsz = 8;
   const hexcase = 0;
 

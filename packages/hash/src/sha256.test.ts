@@ -7,7 +7,7 @@ function cryptoHash(data) {
 
 test('can hash string', () => {
   expect(hash('hunter2')).toEqual(
-    'f52fbd32b2b3b86ff88ef6c490628285f482af15ddcb29541f94bcf526a3f6c7'
+    'f52fbd32b2b3b86ff88ef6c490628285f482af15ddcb29541f94bcf526a3f6c7',
   );
 });
 

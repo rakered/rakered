@@ -13,15 +13,25 @@ First, you'll need to create one or more email templates that you wish to send t
 To send emails, you'll need to set `process.env.MAIL_URL` to a valid `smtp` or `smpts` url. When this environment variable is not set, mails will be printed to `stdout` (your terminal/console).
 
 ```js
-import { send, render } from "@rakered/email";
+import { send, render } from '@rakered/email';
 
 await send({
-  to: "hunter@example.com",
-  from: "stephan@example.com",
-  subject: "Confirm your account",
-  text: "hi there! Please use the link below to verify…",
+  to: 'hunter@example.com',
+  from: 'stephan@example.com',
+  subject: 'Confirm your account',
+  text: 'hi there! Please use the link below to verify…',
   html: render(<ConfirmAccountMail token="gEf…vkJ" />),
 });
+```
+
+Valid SMTP urls have the following format:
+
+```
+# insecure, non ssl:
+smtp://username:password@example.com:25
+
+# secure, using ssl
+smtps://username:password@example.com:456
 ```
 
 ### Building Templates
@@ -33,14 +43,14 @@ Next, we offer a number of building blocks, such as `Title`, `Paragraph`, and `C
 All basic building blocks make smart use of our grid system, which can be found in `./src/template/layout`. It is possible to use this grid system in your templates as well, but generally speaking, you should not need it.
 
 ```js
-import { 
+import {
   CallToAction,
   Content,
   Email,
   Header,
   Paragraph,
   Title,
-} from "@rakered/email";
+} from '@rakered/email';
 
 function ConfirmAccountMail({ siteName, siteUrl }) {
   return (

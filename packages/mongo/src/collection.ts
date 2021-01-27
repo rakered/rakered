@@ -42,7 +42,8 @@ export type Collection<TSchema> = Omit<
     options?: FindOneOptions<T extends TSchema ? TSchema : T>,
   ): Promise<T[]>;
   aggregate<T = TSchema>(
-    pipeline?: Record<string, unknown>,
+    /* eslint-disable-next-line @typescript-eslint/ban-types */
+    pipeline?: object,
     options?: CollectionAggregationOptions,
   ): Promise<T[]>;
   listIndexes(options?: ListIndexOptions): Promise<IndexResult[]>;

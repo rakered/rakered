@@ -16,17 +16,11 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
-  "include": [
-    "src",
-    "typings",
-    "global.d.ts",
-  ],
-  "exclude": [
-    "node_modules",
-    "test/**"
-  ],
+  "include": ["src", "typings", "global.d.ts"],
+  "exclude": ["node_modules", "test/**"],
   "references": [
+    { "path": "packages/email" },
     { "path": "packages/hash" },
-    { "path": "packages/mongo"},
+    { "path": "packages/mongo" }
   ]
 }

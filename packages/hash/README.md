@@ -35,7 +35,7 @@ async function browserHash(data) {
   const encoded = new TextEncoder().encode(data);
   const buffer = await crypto.subtle.digest('SHA-256', encoded);
   const array = Array.from(new Uint8Array(buffer));
-  return array.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+  return array.map((b) => ('00' + b.toString(16)).slice(-2)).join('');
 }
 
 await browserHash('hunter2');

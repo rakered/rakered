@@ -12,5 +12,15 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
     curly: ['error', 'all'],
-  }
+  },
+
+  overrides: [
+    {
+      files: ['**/*.test.{ts,tsx}', '**/scripts/*.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/ban-ts-comment': 'off',
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
+  ],
 };

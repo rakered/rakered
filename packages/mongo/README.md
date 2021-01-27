@@ -1,8 +1,8 @@
 # @rakered/mongo
 
-A small but awesome wrapper around the [native mongodb] driver for Node.js
+A tiny but elegant wrapper around the [native mongodb] driver for Node.js, removing boilerplate and fixing id generation.
 
-This library fixes two problems with the native driver. Verbosity of connections, and id generation.
+![social image](https://github.com/rakered/rakered/raw/main/packages/mongo/docs/social.jpg)
 
 ## Usage
 
@@ -21,7 +21,9 @@ The connection is established when the collection method is invoked. In the exam
 ```js
 import { create } from '@rakered/mongo';
 
-const db = create('mongodb://example.com:27017/rakered', { /* mongo options */});
+const db = create('mongodb://example.com:27017/rakered', {
+  /* mongo options */
+});
 await db.users.findOne({ username: 'smeijer' });
 ```
 
@@ -78,7 +80,7 @@ db.customers.insertOne({ name: 'Stephan' });
 The find method now returns a promise, which directly resolves the results. There is no more need to call `toArray()`.
 
 ```js
-await db.users.find({ ... }); 
+await db.users.find({ ... });
 // » User[]
 ```
 
@@ -127,8 +129,7 @@ This library wraps the native mongo driver, and adds a few restrictions to it. L
 
 3. We've added a `disconnect` handler to the `db`, which proxies `client.close`. Just for developer convenience.
 
-4. We also use `picoid` to generate string based random ids. The Mongo ObjectID has its good side, but it makes `_id` handling and parsing quite verbose. Strings are easier to work with. 
-   
+4. We also use `picoid` to generate string based random ids. The Mongo ObjectID has its good side, but it makes `_id` handling and parsing quite verbose. Strings are easier to work with.
 5. As MongoDB [didn't feel for fixing] their `pkfactory` to support custom id's in bulk upserts because _"It would deviate from other drivers that do not have this behavior"_, we've patched that in this library.
 
 [native mongodb]: https://github.com/mongodb/node-mongodb-native

@@ -2,7 +2,7 @@
 
 A tiny, zero dependency, SHA256 hashing algorithm that can run in both the browser and in node.
 
-![social image](./docs/social.jpg)
+![social image](https://github.com/rakered/rakered/raw/main/packages/hash/docs/social.jpg)
 
 ## Usage:
 
@@ -13,7 +13,7 @@ const hashedPassword = hash('hunter2');
 // » { algorithm: 'sha-256', digest: 'f52f…f6c7' }
 ```
 
-# Alternatives
+## Alternatives
 
 If you're looking for something that only needs to run on nodejs, you might want to use the native `crypto` module instead.
 

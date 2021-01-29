@@ -7,8 +7,8 @@ import picoid from 'picoid';
 import { Collection, getCollection } from './collection';
 
 export type Db = MongoDb & {
-  connect: () => Promise<Db>;
-  disconnect: MongoClient['close'];
+  connect: () => Promise<void>;
+  disconnect: (force?: boolean) => Promise<void>;
 } & Record<string, Collection<any>>;
 
 export type Options = MongoClientOptions;
@@ -40,7 +40,6 @@ export function create(
     options,
   );
 
-  // 21-01-21 13:43
   async function getInstance() {
     if (instancePromise) {
       return instancePromise;
@@ -51,13 +50,24 @@ export function create(
         client = mongoClient;
 
         db = client.db() as Db;
-        db.disconnect = client.close.bind(client);
 
         resolve(db);
       });
     });
 
     return instancePromise;
+  }
+
+  async function connect() {
+    await getInstance();
+  }
+
+  async function disconnect(force) {
+    if (!client) {
+      return;
+    }
+
+    await client.close(force);
   }
 
   return new Proxy(
@@ -74,7 +84,11 @@ export function create(
         }
 
         if (name === 'connect') {
-          return getInstance;
+          return connect;
+        }
+
+        if (name === 'disconnect') {
+          return disconnect;
         }
 
         if (collections[name]) {

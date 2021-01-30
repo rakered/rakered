@@ -19,6 +19,7 @@
   "include": ["src", "typings", "global.d.ts"],
   "exclude": ["node_modules", "test/**"],
   "references": [
+    { "path": "packages/accounts" },
     { "path": "packages/email" },
     { "path": "packages/hash" },
     { "path": "packages/mongo" }

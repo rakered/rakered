@@ -1,5 +1,5 @@
 import { connect, Db } from '../db';
-import { getCursor, parseCursor } from './cursor';
+import { getCursor } from './cursor';
 
 let db: Db;
 
@@ -345,4 +345,20 @@ test('can paginate on id', async () => {
   expect(page2.nodes[0]).toMatchPartial({ name: 'doc 04' });
   expect(page2.nodes[1]).toMatchPartial({ name: 'doc 05' });
   expect(page2.nodes[2]).toMatchPartial({ name: 'doc 06' });
+});
+
+test('can paginate on edge|node|all types', async () => {
+  const col = db.connectionCol;
+
+  const hybrid = await col.paginate<Doc>({}, { first: 3 });
+  expect(hybrid).toHaveProperty('nodes');
+  expect(hybrid).toHaveProperty('edges');
+
+  const edges = await col.paginate<Doc>({}, { first: 3, type: 'edges' });
+  expect(edges).not.toHaveProperty('nodes');
+  expect(edges).toHaveProperty('edges');
+
+  const nodes = await col.paginate<Doc>({}, { first: 3, type: 'nodes' });
+  expect(nodes).toHaveProperty('nodes');
+  expect(nodes).not.toHaveProperty('edges');
 });

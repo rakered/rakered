@@ -13,6 +13,7 @@ import {
   UpdateOneOptions,
 } from 'mongodb';
 import {
+  Connection,
   ConnectionOptions,
   getConnection,
   PaginationArgs,
@@ -51,10 +52,26 @@ export type Collection<TSchema> = Omit<
     pipeline?: object,
     options?: CollectionAggregationOptions,
   ): Promise<T[]>;
+
   paginate<T = TSchema>(
-    query?: FilterQuery<TSchema>,
+    query1: FilterQuery<TSchema>,
     options?: ConnectionOptions<T extends TSchema ? TSchema : T>,
-  );
+  ): Promise<Connection<T>>;
+
+  paginate<T = TSchema>(
+    query2: FilterQuery<TSchema>,
+    options: ConnectionOptions<T extends TSchema ? TSchema : T> & {
+      type: 'nodes';
+    },
+  ): Promise<Omit<Connection<T>, 'edges'>>;
+
+  paginate<T = TSchema>(
+    query3: FilterQuery<TSchema>,
+    options: ConnectionOptions<T extends TSchema ? TSchema : T> & {
+      type: 'edges';
+    },
+  ): Promise<Omit<Connection<T>, 'nodes'>>;
+
   listIndexes(options?: ListIndexOptions): Promise<IndexResult[]>;
   initializeOrderedBulkOp(
     options?: CommonOptions,

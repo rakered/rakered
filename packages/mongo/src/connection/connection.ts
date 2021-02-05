@@ -7,8 +7,8 @@ export interface Connection<T> {
   pageInfo: {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
-    endCursor: string | null;
-    startCursor: string | null;
+    endCursor: string | undefined;
+    startCursor: string | undefined;
   };
   nodes: T[];
   edges: { cursor: string; node: T }[];
@@ -28,8 +28,28 @@ export type ConnectionOptions<T> = Pick<FindOneOptions<T>, 'projection'> &
 export async function getConnection<T>(
   collection: Collection<T>,
   query: FilterQuery<T>,
-  options: ConnectionOptions<T> = {},
-): Promise<Connection<T>> {
+  options: ConnectionOptions<T>,
+): Promise<Connection<T>>;
+
+export async function getConnection<T>(
+  collection: Collection<T>,
+  query: FilterQuery<T>,
+  options: ConnectionOptions<T> & { type: 'nodes' },
+): Promise<Omit<Connection<T>, 'edges'>>;
+
+export async function getConnection<T>(
+  collection: Collection<T>,
+  query: FilterQuery<T>,
+  options: ConnectionOptions<T> & { type: 'edges' },
+): Promise<Omit<Connection<T>, 'nodes'>>;
+
+export async function getConnection<T>(
+  collection: Collection<T>,
+  query: FilterQuery<T>,
+  options: ConnectionOptions<T> & { type?: 'edges' | 'nodes' } = {},
+): Promise<
+  Connection<T> | Omit<Connection<T>, 'nodes'> | Omit<Connection<T>, 'edges'>
+> {
   validatePaginationArgs(options);
   const { projection, after, before, first, last } = options;
 
@@ -87,15 +107,25 @@ export async function getConnection<T>(
     cursor: getCursor(node, orderBy),
   }));
 
-  return {
+  const connection: any = {
     totalCount,
     pageInfo: {
-      startCursor: edges[0]?.cursor || null,
-      endCursor: edges[edges.length - 1]?.cursor || null,
+      startCursor: edges[0]?.cursor || undefined,
+      endCursor: edges[edges.length - 1]?.cursor || undefined,
       hasPreviousPage,
       hasNextPage,
     },
     nodes,
     edges,
   };
+
+  if (options.type === 'nodes') {
+    delete connection.edges;
+  }
+
+  if (options.type === 'edges') {
+    delete connection.nodes;
+  }
+
+  return connection;
 }

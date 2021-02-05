@@ -97,6 +97,8 @@ await db.users.aggregate([{ ... }])
 
 The paginate method is an addition to the native methods, that can be used for (relay style) cursor based pagination. It resolves to a connection with nodes, edges, and pageInfo.
 
+Use the optional `type` option to limit the response to either `nodes` or `edges`.
+
 ```js
 await db.users.paginate({ ... }, { first: 10, sort: ['name', 'asc'], after: '...' })
 /* » {

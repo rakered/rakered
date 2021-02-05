@@ -11,6 +11,12 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
+    'prefer-const': [
+      'error',
+      {
+        destructuring: 'all',
+      },
+    ],
     curly: ['error', 'all'],
   },
 

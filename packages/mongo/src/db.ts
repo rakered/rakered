@@ -13,12 +13,12 @@ export type Db = MongoDb & {
 
 export type Options = MongoClientOptions;
 
-export function create(
+export function create<TDb extends Db>(
   uri: string = process.env.MONGO_URL || 'mongodb://localhost:27017',
   options?: Options,
-): Db {
+): TDb {
   let client: MongoClient;
-  let db: Db;
+  let db: TDb;
 
   const collections = {};
   let instancePromise: Promise<Db>;
@@ -49,7 +49,7 @@ export function create(
       MongoClient.connect(uri, clientOptions).then((mongoClient) => {
         client = mongoClient;
 
-        db = client.db() as Db;
+        db = client.db() as TDb;
 
         resolve(db);
       });
@@ -64,6 +64,7 @@ export function create(
 
   async function disconnect(force) {
     if (!client) {
+      /* istanbul ignore next */
       return;
     }
 
@@ -80,6 +81,7 @@ export function create(
         }
 
         if (db?.hasOwnProperty(name)) {
+          /* istanbul ignore next */
           return db[name];
         }
 
@@ -99,7 +101,7 @@ export function create(
         return collections[name];
       },
     },
-  ) as Db;
+  ) as TDb;
 }
 
 export async function connect(uri?: string, options?: Options): Promise<Db> {

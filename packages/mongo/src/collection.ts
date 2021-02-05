@@ -12,6 +12,11 @@ import {
   UnorderedBulkOperation,
   UpdateOneOptions,
 } from 'mongodb';
+import {
+  ConnectionOptions,
+  getConnection,
+  PaginationArgs,
+} from './connection/connection';
 
 interface ListIndexOptions {
   batchSize?: number;
@@ -46,6 +51,10 @@ export type Collection<TSchema> = Omit<
     pipeline?: object,
     options?: CollectionAggregationOptions,
   ): Promise<T[]>;
+  paginate<T = TSchema>(
+    query?: FilterQuery<TSchema>,
+    options?: ConnectionOptions<T extends TSchema ? TSchema : T>,
+  );
   listIndexes(options?: ListIndexOptions): Promise<IndexResult[]>;
   initializeOrderedBulkOp(
     options?: CommonOptions,
@@ -135,6 +144,13 @@ function createPk(instance) {
 
   return collection.s.pkFactory.createPk(options);
 }
+
+Collection.prototype.paginate = async function findPage<T>(
+  filter: FilterQuery<T>,
+  options: ConnectionOptions<T>,
+) {
+  return getConnection(this, filter, options);
+};
 
 const _insertOne = Collection.prototype.insertOne;
 Collection.prototype.insertOne = async function insertOne(doc, options) {

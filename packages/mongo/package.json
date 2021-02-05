@@ -1,6 +1,6 @@
 {
   "name": "@rakered/mongo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A better mongodb driver",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -24,6 +24,7 @@
   ],
   "keywords": [],
   "dependencies": {
+    "@rakered/errors": "^1.0.0",
     "mongodb": "^3.6.3",
     "picoid": "^1.0.0"
   },

@@ -93,6 +93,25 @@ await db.users.aggregate([{ ... }])
 // » User[]
 ```
 
+### `db.collection.paginate`
+
+The paginate method is an addition to the native methods, that can be used for (relay style) cursor based pagination. It resolves to a connection with nodes, edges, and pageInfo.
+
+```js
+await db.users.paginate({ ... }, { first: 10, sort: ['name', 'asc'], after: '...' })
+/* » {
+ nodes: User[],
+ edges: { cursor: string, node: User }[],
+ totalCount: number;
+ pageInfo: {
+   hasNextPage: boolean;
+   hasPreviousPage: boolean;
+   endCursor: string;
+   startCursor: string;
+ }
+} */
+```
+
 ### `db.collection.listIndexes`
 
 The listIndexes method now returns a promise, which directly resolves the results. There is no more need to call `toArray()`.

@@ -4,6 +4,7 @@ import type { Context, AuthTokenResult, Password } from '../types';
 import { getPasswordString, SHA256 } from '../lib/password';
 import { RESET_TOKEN_EXPIRY_SECONDS } from '../lib/constants';
 import { createTokens } from '../lib/jwt';
+import { UserInputError } from '@rakered/errors';
 
 export interface ResetPasswordDocument {
   token: string;
@@ -15,7 +16,7 @@ async function resetPassword(
   { collection }: Context,
 ): Promise<AuthTokenResult> {
   if (typeof token !== 'string' || typeof password !== 'string') {
-    throw new Error('Invalid token or password provided.');
+    throw new UserInputError('Invalid token or password provided.');
   }
 
   const passwordString = getPasswordString(password);
@@ -42,7 +43,7 @@ async function resetPassword(
   );
 
   if (!value) {
-    throw new Error('Invalid or expired token provided.');
+    throw new UserInputError('Invalid or expired token provided.');
   }
 
   return createTokens(value);

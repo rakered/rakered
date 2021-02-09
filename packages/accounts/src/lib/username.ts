@@ -8,7 +8,7 @@ import blacklist from 'the-big-username-blacklist';
 export const USERNAME_REGEXP = /^(?=.{3,20}$)([a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9]))*)$/;
 
 export const reserved = new Set(
-  ['anonymous', 'own', 'webhook', 'webhooks', 'yourself'].concat(
+  ['anonymous', 'own', 'viewer', 'webhook', 'webhooks', 'yourself'].concat(
     blacklist.list,
   ),
 );

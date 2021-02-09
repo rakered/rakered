@@ -23,6 +23,7 @@
   "keywords": [],
   "dependencies": {
     "@rakered/email": "^1.0.0",
+    "@rakered/errors": "^1.0.0",
     "@rakered/mongo": "^1.0.0",
     "argon2": "^0.27.1",
     "bcryptjs": "^2.4.3",

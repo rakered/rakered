@@ -1,6 +1,7 @@
 import { SHA256 } from '../lib/password';
-import { Context, AuthTokenResult } from '../types';
-import { createTokens, verifyToken } from '../lib/jwt';
+import { Context } from '../types';
+import { verifyToken } from '../lib/jwt';
+import { UserInputError } from '@rakered/errors';
 
 export type TokenDocument = { refreshToken: string; accessToken: string };
 
@@ -9,7 +10,7 @@ async function revokeToken(
   { collection }: Context,
 ): Promise<void> {
   if (!tokens?.accessToken || !tokens?.refreshToken) {
-    throw new Error('Incorrect token provided.');
+    throw new UserInputError('Incorrect token provided.');
   }
 
   const currentRefreshToken = verifyToken(tokens.refreshToken);
@@ -22,7 +23,7 @@ async function revokeToken(
     !currentRefreshToken ||
     currentAccessToken._id !== currentRefreshToken._id
   ) {
-    throw new Error('Incorrect token provided.');
+    throw new UserInputError('Incorrect token provided.');
   }
 
   const hashedToken = SHA256(tokens.refreshToken);
@@ -36,7 +37,7 @@ async function revokeToken(
   );
 
   if (modifiedCount !== 1) {
-    throw new Error('Incorrect token provided.');
+    throw new UserInputError('Incorrect token provided.');
   }
 }
 

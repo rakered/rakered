@@ -1,5 +1,6 @@
 import { isValidEmail, normalizeEmail } from '../lib/email';
 import { Context } from '../types';
+import { UserInputError } from '@rakered/errors';
 
 export interface removeEmailDocument {
   userId: string;
@@ -17,7 +18,7 @@ async function removeEmail(
   const email = normalizeEmail(options.email);
 
   if (!isValidEmail(email)) {
-    throw new Error('Email is invalid.');
+    throw new UserInputError('Email is invalid.');
   }
 
   const now = new Date();
@@ -34,7 +35,7 @@ async function removeEmail(
   );
 
   if (modifiedCount !== 1) {
-    throw new Error('Incorrect userId provided or email is unknown.');
+    throw new UserInputError('Incorrect userId provided or email is unknown.');
   }
 }
 

@@ -23,6 +23,7 @@ export function createTokens(document: UserDocument): AuthTokenResult {
 
   const data = {
     ...user,
+    sub: user._id,
     prm: picoid(), // prime is used to tie request and refresh token together
   };
 

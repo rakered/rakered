@@ -5,28 +5,39 @@ import { Context, AuthTokenResult, Password } from '../types';
 import { normalizeEmail } from '../lib/email';
 import { createTokens } from '../lib/jwt';
 import { normalizeUsername } from '../lib/username';
+import { UserInputError } from '@rakered/errors';
 
-export type LoginDocument = {
-  identity: string;
-  password: Password;
-};
+// Support a few variants for developer convenience
+export type LoginDocument =
+  | { identity: string; password: Password }
+  | { email: string; password: Password }
+  | { username: string; password: Password };
 
 async function login(
-  { identity, password }: LoginDocument,
+  credentials: LoginDocument,
   { collection }: Context,
 ): Promise<AuthTokenResult> {
+  // only one of them can be provided
+  const identity =
+    'email' in credentials
+      ? credentials.email
+      : 'username' in credentials
+      ? credentials.username
+      : credentials.identity;
+
   if (typeof identity !== 'string') {
-    throw new Error('Incorrect credentials provided.');
+    throw new UserInputError('Incorrect credentials provided.');
   }
 
-  const passwordString = getPasswordString(password);
+  const passwordString = getPasswordString(credentials.password);
   const selector = identity.includes('@')
     ? { 'emails.address': normalizeEmail(identity) }
     : { handle: normalizeUsername(identity) };
+
   const user = await collection.findOne(selector);
 
   if (!user) {
-    throw new Error('Incorrect credentials provided.');
+    throw new UserInputError('Incorrect credentials provided.');
   }
 
   const hashedPassword = user.services.password;
@@ -37,7 +48,7 @@ async function login(
     : false;
 
   if (!valid) {
-    throw new Error('Incorrect credentials provided.');
+    throw new UserInputError('Incorrect credentials provided.');
   }
 
   const newTokens = createTokens(user);

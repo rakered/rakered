@@ -1,6 +1,7 @@
 import { SHA256 } from '../lib/password';
 import { Context, AuthTokenResult } from '../types';
 import { createTokens, verifyToken } from '../lib/jwt';
+import { UserInputError } from '@rakered/errors';
 
 export type TokenDocument = { refreshToken: string; accessToken: string };
 
@@ -9,7 +10,7 @@ async function refreshToken(
   { collection }: Context,
 ): Promise<AuthTokenResult> {
   if (!tokens?.accessToken || !tokens?.refreshToken) {
-    throw new Error('Incorrect token provided.');
+    throw new UserInputError('Incorrect token provided.');
   }
 
   const currentRefreshToken = verifyToken(tokens.refreshToken);
@@ -22,7 +23,7 @@ async function refreshToken(
     !currentRefreshToken ||
     currentRefreshToken.prm !== currentAccessToken.prm
   ) {
-    throw new Error('Incorrect token provided.');
+    throw new UserInputError('Incorrect token provided.');
   }
 
   const hashedToken = SHA256(tokens.refreshToken);
@@ -33,7 +34,7 @@ async function refreshToken(
   });
 
   if (!user) {
-    throw new Error('Incorrect token provided.');
+    throw new UserInputError('Incorrect token provided.');
   }
 
   const newTokens = createTokens(user);
@@ -57,7 +58,7 @@ async function refreshToken(
   if (modifiedCount !== 1) {
     // possible when the user has been removed between retrieval and update
     /* istanbul ignore next */
-    throw new Error('Incorrect token provided');
+    throw new UserInputError('Incorrect token provided');
   }
 
   return newTokens;

@@ -8,9 +8,10 @@ import {
 import { isValidEmail, normalizeEmail } from '../lib/email';
 import { getPasswordString, SHA256 } from '../lib/password';
 import { Context, AuthTokenResult, Password } from '../types';
-import { isDuplicateKeyError } from '../lib/error';
+import { isDuplicateKeyError } from '@rakered/mongo/lib/utils';
 import { createTokens } from '../lib/jwt';
 import picoid from 'picoid';
+import { UserInputError } from '@rakered/errors';
 
 export interface InviteUserDocument {
   email: string;
@@ -56,25 +57,27 @@ async function createUser(
     'password' in user ? getPasswordString(user.password) : '';
 
   if (typeof email !== 'string' && typeof username !== 'string') {
-    throw new Error('Either email or username should be provided.');
+    throw new UserInputError('Either email or username should be provided.');
   }
 
   if (email && !isValidEmail(email)) {
-    throw new Error('Email is invalid or already taken.');
+    throw new UserInputError('Email is invalid or already taken.');
   }
 
   if (typeof username === 'string') {
     if (isReservedUsername(username)) {
-      throw new Error(`Username ${username} is unavailable.`);
+      throw new UserInputError(`Username ${username} is unavailable.`);
     }
 
     if (!isValidUsername(username)) {
-      throw new Error(`Username ${username} is invalid.`);
+      throw new UserInputError(`Username ${username} is invalid.`);
     }
   }
 
   if (!email && !passwordString) {
-    throw new Error(`Password should be provided if email is not given.`);
+    throw new UserInputError(
+      `Password should be provided if email is not given.`,
+    );
   }
 
   const now = new Date();
@@ -122,11 +125,11 @@ async function createUser(
     await collection.insertOne(doc);
   } catch (e) {
     if (isDuplicateKeyError(e, 'emails.address')) {
-      throw new Error(`Email is invalid or already taken.`);
+      throw new UserInputError(`Email is invalid or already taken.`);
     }
 
     if (isDuplicateKeyError(e, 'handle')) {
-      throw new Error(`Username ${username} is unavailable.`);
+      throw new UserInputError(`Username ${username} is unavailable.`);
     }
 
     /* istanbul ignore next */

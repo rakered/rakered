@@ -1,11 +1,9 @@
 import picoid from 'picoid';
 import { Context, TokenResult } from '../types';
 import { SHA256 } from '../lib/password';
-import {
-  RESET_TOKEN_EXPIRY_SECONDS,
-  RESET_TOKEN_LENGTH,
-} from '../lib/constants';
+import { RESET_TOKEN_EXPIRY_SECONDS } from '../lib/constants';
 import { isValidEmail, normalizeEmail } from '../lib/email';
+import { UserInputError } from '@rakered/errors';
 
 export interface PasswordResetDocument {
   email: string;
@@ -16,10 +14,10 @@ async function createPasswordResetToken(
   { collection }: Context,
 ): Promise<TokenResult> {
   if (typeof email !== 'string' || !isValidEmail(email)) {
-    throw new Error('Email is invalid.');
+    throw new UserInputError('Email is invalid.');
   }
 
-  const token = picoid(RESET_TOKEN_LENGTH);
+  const token = picoid();
 
   const reset = {
     token: SHA256(token),
@@ -34,7 +32,7 @@ async function createPasswordResetToken(
   );
 
   if (modifiedCount !== 1) {
-    throw new Error('Email is unknown.');
+    throw new UserInputError('Email is unknown.');
   }
 
   const expires = Math.floor(

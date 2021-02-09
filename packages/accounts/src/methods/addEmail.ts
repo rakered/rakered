@@ -1,6 +1,7 @@
 import { isValidEmail, normalizeEmail } from '../lib/email';
 import { Context } from '../types';
-import { isDuplicateKeyError } from '../lib/error';
+import { isDuplicateKeyError } from '@rakered/mongo/lib/utils';
+import { UserInputError } from '@rakered/errors';
 
 export interface addEmailDocument {
   userId: string;
@@ -17,7 +18,7 @@ async function addEmail(
   const email = normalizeEmail(options.email);
 
   if (!isValidEmail(email)) {
-    throw new Error('Email is invalid or already taken.');
+    throw new UserInputError('Email is invalid or already taken.');
   }
 
   const now = new Date();
@@ -34,11 +35,13 @@ async function addEmail(
     );
 
     if (modifiedCount !== 1) {
-      throw new Error('Incorrect userId provided or email already taken.');
+      throw new UserInputError(
+        'Incorrect userId provided or email already taken.',
+      );
     }
   } catch (e) {
     if (isDuplicateKeyError(e, 'emails.address')) {
-      throw new Error(`Email is invalid or already taken.`);
+      throw new UserInputError(`Email is invalid or already taken.`);
     }
 
     /* istanbul ignore next */

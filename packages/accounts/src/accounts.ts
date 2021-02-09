@@ -95,8 +95,8 @@ function guardProduction(options: Options) {
     errors.push('env.MAIL_URL must be provided.');
   }
 
-  if (!process.env.JWT_TOKEN) {
-    errors.push('env.JWT_TOKEN must be provided.');
+  if (!process.env.JWT_SECRET) {
+    errors.push('env.JWT_SECRET must be provided.');
   }
 
   if (errors.length > 0) {

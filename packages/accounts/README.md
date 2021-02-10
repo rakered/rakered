@@ -27,7 +27,7 @@ There are various options available. In development mode, this library runs in z
 
 ### Collection
 
-First things first, the database connection. If you don't specify anything, it will be managed for you with [@rakered/mongo]. The account system will connect to the MongoDB instance that's available under `process.env.MONGO_URL`, and will use the `users` collection to save and read the documents.
+First things first, the database connection. If you don't specify anything, it will be managed for you with [@rakered/mongo][rakered/mongo]. The account system will connect to the MongoDB instance that's available under `process.env.MONGO_URL`, and will use the `users` collection to save and read the documents.
 
 #### custom collection name
 
@@ -84,7 +84,7 @@ const accounts = init({
 
 ### Email
 
-This library uses [@rakered/email] to send emails for email address verification and to send password reset tokens. The address for the smtp server is read from `process.env.MAIL_URL`, be sure to set it to any valid smtp url.
+This library uses [@rakered/email][rakered/email] to send emails for email address verification and to send password reset tokens. The address for the smtp server is read from `process.env.MAIL_URL`, be sure to set it to any valid smtp url.
 
 Provide the following options before you deploy to production. The values are used in the email template, and should be replaced with your own.
 
@@ -153,7 +153,7 @@ Both `username` as well as `email` are optional, but one of those must be provid
 
 - **password** _String_ | _{ digest: String, algorithm: 'sha-256' }_
 
-  Optional - The user's password. The password should not be send in plain text over the wire. Instead, use [@rakered/hash] to hash it with sha-256 before sending it to the server. When left out, this function won't be returning refresh tokens. We assume that no password, means that the user is being invited. Use `sendEnrollmentEmail` to let them set their initial password.
+  Optional - The user's password. The password should not be send in plain text over the wire. Instead, use [@rakered/hash][rakered/hash] to hash it with sha-256 before sending it to the server. When left out, this function won't be returning refresh tokens. We assume that no password, means that the user is being invited. Use `sendEnrollmentEmail` to let them set their initial password.
 
 - **name** _String_
   Optional - The full name of the user.
@@ -230,7 +230,7 @@ Reset the password for a user using a token received in email.
 
 - **password** _String_ | _{ digest: String, algorithm: 'sha-256' }_
 
-  A new password for the user. The password should not be send in plain text over the wire. Instead, use [@rakered/hash] to hash it with sha-256 before sending it to the server.
+  A new password for the user. The password should not be send in plain text over the wire. Instead, use [@rakered/hash][rakered/hash] to hash it with sha-256 before sending it to the server.
 
 ### `login(options)`
 
@@ -244,7 +244,7 @@ Obtain a `refreshToken` and `accessToken` by using password based authentication
 
 - **password** _String_ | _{ digest: String, algorithm: 'sha-256' }_
 
-  The user's password. The password should not be send in plain text over the wire. Instead, use [@rakered/hash] to hash it with sha-256 before sending it to the server.
+  The user's password. The password should not be send in plain text over the wire. Instead, use [@rakered/hash][rakered/hash] to hash it with sha-256 before sending it to the server.
 
 ### `refreshToken(options)`
 
@@ -337,5 +337,6 @@ The MongoDB Collection is exposed under the `accounts.collection` property, for 
 - Usernames are more strict than in Meteor, because of this it can be that your existing user collection cannot be used as source for this library. Meteor usernames are case sensitive. Meaning, `alex`, `Alex`, and `AleX` are different users. We do not support this. We can write a detection script for this, but that's something we still have to do.
 
 [migration script example]: ./docs/migrate-meteor-verification-tokens
-[@rakered/mongo]: https://github.com/rakered/rakered/tree/main/packages/mongo
-[@rakered/email]: https://github.com/rakered/rakered/tree/main/packages/email
+[rakered/mongo]: https://github.com/rakered/rakered/tree/main/packages/mongo
+[rakered/email]: https://github.com/rakered/rakered/tree/main/packages/email
+[rakered/hash]: https://github.com/rakered/rakered/tree/main/packages/hash

@@ -15,13 +15,12 @@ async function resetPassword(
   { token, password }: ResetPasswordDocument,
   { collection }: Context,
 ): Promise<AuthTokenResult> {
-  if (typeof token !== 'string' || typeof password !== 'string') {
+  const passwordString = getPasswordString(password);
+  if (typeof token !== 'string' || !passwordString) {
     throw new UserInputError('Invalid token or password provided.');
   }
 
-  const passwordString = getPasswordString(password);
   const hashedPassword = await argon.hash(passwordString);
-
   const expiryDate = new Date(Date.now() - RESET_TOKEN_EXPIRY_SECONDS * 1000);
 
   const { value } = await collection.findOneAndUpdate(

@@ -20,5 +20,5 @@ export function getPasswordString(
   }
 
   /* istanbul ignore next */
-  throw new Error('Invalid password hash algorithm.');
+  throw new Error('Unsupported password hash algorithm.');
 }

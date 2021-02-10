@@ -10,7 +10,7 @@ test('Throws error when trying to init in production, without email & token opti
 
       - options.email must be provided.
       - env.MAIL_URL must be provided.
-      - env.JWT_TOKEN must be provided.
+      - env.JWT_SECRET must be provided.
 
     Please consult the docs if you're unsure how to fix this.
 `);

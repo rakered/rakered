@@ -10,14 +10,16 @@ const parsers = {
   text: (el) => el.value,
 };
 
-export type { HashResult };
+// rename the type, as that makes more sense in this context
+export type HashedPassword = HashResult;
+
 export interface Event {
   readonly currentTarget: EventTarget | null;
   preventDefault(): void;
 }
 
 export interface FormData {
-  [key: string]: string | number | Date | HashResult;
+  [key: string]: string | number | Date | HashedPassword;
 }
 
 export function getFormData<T extends FormData>(

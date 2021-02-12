@@ -13,12 +13,13 @@ import { getFormData } from '@rakered/forms';
 
 const onSubmit = (event) => {
   const data = getFormData(event);
-  // » { name: 'smeijer' }
+  // » { name: 'smeijer', password: { digest: 'd03…83e', algorithm: 'sha-256' } }
 };
 
 <form onSubmit={onSubmit}>
   <input name="user" />
-</form>;
+  <input name="password" type="password" />
+</form>
 ```
 
 Because we often want to wrap submit handlers between `event.preventDefault()` and `return false`, there is a `handleSubmit` helper that does exactly that.
@@ -32,19 +33,17 @@ const onSubmit = handleSubmit((values) => {
 
 <form onSubmit={onSubmit}>
   <input name="user" />
-</form>;
+</form>
 ```
 
 ### Type Coercion
 
 A number of specific input types, are coerced to the proper data type.
 
-- **type="password"** _{ digest: String, algorithm: 'sha-256' }_
-
+- **password** _{ digest: String, algorithm: 'sha-256' }_
   This one is important, so let's start with that. Passwords are hashed using [@rakered/hash][rakered/hash], so you won't be reading the password that the user entered. Please don't try to work arround this. Instead, embrace it.
 
 - **datetime-local** _Date_
-
   The `datetime-local` input stores a full date, so the is converted to a proper Date. Other date-like fields, such as `date`, `time`, or `week` only support partial dates, and are left alone.
 
 - **checkbox** _Boolean_
@@ -70,7 +69,7 @@ const signup = handleSubmit<User>((values) => {
 <form onSubmit={signup}>
   <input name="user" />
   <input name="age" type="number" />
-</form>;
+</form>
 ```
 
 [rakered/hash]: https://github.com/rakered/rakered/tree/main/packages/hash

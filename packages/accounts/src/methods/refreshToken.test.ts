@@ -41,6 +41,31 @@ test('refreshing a token invalidates the current one', async () => {
   expect(refreshTokens![0].token).toEqual(SHA256(newTokens.refreshToken));
 });
 
+test('only the last 5 tokens are persisted', async () => {
+  const now = Date.now();
+
+  const tokens = Array.from({ length: 10 }).map((_, idx) => ({
+    token: idx,
+    when: new Date(),
+  }));
+
+  await accounts.collection.updateOne(
+    { _id: identity.user._id },
+    { $push: { 'services.resume.refreshTokens': { $each: tokens } } },
+  );
+
+  await accounts.refreshToken({
+    refreshToken: identity.refreshToken,
+    accessToken: identity.accessToken,
+  });
+
+  const user = (await accounts.collection.findOne({
+    _id: identity.user._id,
+  })) as UserDocument;
+
+  expect(user.services.resume?.refreshTokens).toHaveLength(5);
+});
+
 test('requires two tokens to refresh the token', async () => {
   await expect(
     // @ts-ignore

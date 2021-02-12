@@ -2,6 +2,10 @@ import { SHA256 } from '../lib/password';
 import { Context, AuthTokenResult } from '../types';
 import { createTokens, verifyToken } from '../lib/jwt';
 import { UserInputError } from '@rakered/errors';
+import {
+  MAX_ACTIVE_REFRESH_TOKENS,
+  REFRESH_TOKEN_MAX_EXPIRY_SECONDS,
+} from '../lib/constants';
 
 export type TokenDocument = { refreshToken: string; accessToken: string };
 
@@ -44,13 +48,36 @@ async function refreshToken(
   };
 
   // mongo cannot $pull and $push to the same target collection, as that
-  // "would create conflict", so we replace the document with a $set op instead
+  // "would create conflict", so first we pull the existing token and expired
+  // tokens out of the collection. And then push the new token back to the end,
+  // while also removing all but the last 5 tokens.
+  const minDate = new Date(
+    Date.now() - REFRESH_TOKEN_MAX_EXPIRY_SECONDS * 1000,
+  );
+
   const { modifiedCount } = await collection.updateOne(
-    { _id: user._id, 'services.resume.refreshTokens.token': hashedToken },
+    { _id: user._id },
     {
+      $pull: {
+        'services.resume.refreshTokens': {
+          $or: [{ token: hashedToken }, { when: { $lte: minDate } }],
+        },
+      },
+    },
+  );
+
+  // push the new token to the end, and remove all but last n refresh tokens
+  await collection.updateOne(
+    { _id: user._id },
+    {
+      $push: {
+        'services.resume.refreshTokens': {
+          $each: [update],
+          $slice: -MAX_ACTIVE_REFRESH_TOKENS,
+        },
+      },
       $set: {
         updatedAt: update.when,
-        'services.resume.refreshTokens.$': update,
       },
     },
   );

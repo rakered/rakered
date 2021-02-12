@@ -6,6 +6,7 @@ import { normalizeEmail } from '../lib/email';
 import { createTokens } from '../lib/jwt';
 import { normalizeUsername } from '../lib/username';
 import { UserInputError } from '@rakered/errors';
+import { MAX_ACTIVE_REFRESH_TOKENS } from '../lib/constants';
 
 // Support a few variants for developer convenience
 export type LoginDocument =
@@ -57,10 +58,16 @@ async function login(
     token: SHA256(newTokens.refreshToken),
   };
 
+  // push the new token to the end, and remove all but last n refresh tokens
   await collection.updateOne(
     { _id: user._id },
     {
-      $push: { 'services.resume.refreshTokens': update },
+      $push: {
+        'services.resume.refreshTokens': {
+          $each: [update],
+          $slice: -MAX_ACTIVE_REFRESH_TOKENS,
+        },
+      },
       $set: { updatedAt: update.when },
     },
   );

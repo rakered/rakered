@@ -52,7 +52,7 @@ export function ResetPasswordEmail({
         <CallToAction href={magicLink}>Reset password</CallToAction>
 
         <Paragraph>
-          If you did create this request, please ignore this message.
+          If you did not create this request, please ignore this message.
         </Paragraph>
       </Content>
 

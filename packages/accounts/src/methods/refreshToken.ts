@@ -41,7 +41,17 @@ async function refreshToken(
     throw new UserInputError('Incorrect token provided.');
   }
 
-  const newTokens = createTokens(user);
+  const expiresIn = currentRefreshToken.exp - Math.floor(Date.now() / 1000);
+
+  // fail if the token is less than 5 seconds valid.
+  if (expiresIn < 5) {
+    throw new UserInputError('Incorrect token provided.');
+  }
+
+  const newTokens = createTokens(user, {
+    refreshToken: { expiresIn },
+  });
+
   const update = {
     when: new Date(),
     token: SHA256(newTokens.refreshToken),

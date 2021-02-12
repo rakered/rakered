@@ -1,12 +1,13 @@
 import { Accounts } from '../accounts';
 import { Context, AuthTokenResult, UserDocument } from '../types';
 import { getTestContext, initForTest, TEST_USER } from './__tests__/helpers';
-import { createTokens } from '../lib/jwt';
+import { createTokens, verifyToken } from '../lib/jwt';
 import { SHA256 } from '../lib/password';
 
 let accounts: Accounts;
 let identity: AuthTokenResult;
 let context: Context;
+const _dateNow = Date.now.bind(global.Date);
 
 beforeAll(async () => {
   accounts = await initForTest('refreshToken');
@@ -16,6 +17,10 @@ beforeAll(async () => {
 beforeEach(async () => {
   await accounts.collection.deleteMany({});
   identity = await accounts.createUser(TEST_USER);
+});
+
+afterEach(() => {
+  Date.now = _dateNow;
 });
 
 afterAll(async () => {
@@ -39,6 +44,28 @@ test('refreshing a token invalidates the current one', async () => {
   expect(refreshTokens).toHaveLength(1);
 
   expect(refreshTokens![0].token).toEqual(SHA256(newTokens.refreshToken));
+});
+
+test('refreshing a token does not extend the lifetime', async () => {
+  const now = Date.now();
+
+  Date.now = jest.fn(() => now + 86_400_000); // + 1 day
+
+  const newTokens = await accounts.refreshToken({
+    refreshToken: identity.refreshToken,
+    accessToken: identity.accessToken,
+  });
+
+  const oldTokenExpires = verifyToken(identity.refreshToken)!.exp * 1000;
+  const newTokenExpires = verifyToken(newTokens.refreshToken)!.exp * 1000;
+
+  // lifetime should not be extended, but due to rounding errors there can be
+  // a one second shift.
+  const lifetimeShift = Math.abs(newTokenExpires - oldTokenExpires);
+
+  expect(oldTokenExpires).toBeGreaterThan(now);
+  expect(newTokenExpires).toBeGreaterThan(now);
+  expect(lifetimeShift).toBeLessThanOrEqual(1000);
 });
 
 test('only the last 5 tokens are persisted', async () => {

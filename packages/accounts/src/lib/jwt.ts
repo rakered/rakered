@@ -4,13 +4,26 @@ import { AuthTokenResult, User, UserDocument } from '../types';
 import { compact } from './compact';
 import {
   ACCESS_TOKEN_EXPIRY_SECONDS,
+  ACCESS_TOKEN_MAX_EXPIRY_SECONDS,
   REFRESH_TOKEN_EXPIRY_SECONDS,
+  REFRESH_TOKEN_MAX_EXPIRY_SECONDS,
 } from './constants';
 
-// Note, the `accessToken` is the one stored in cookies, the `refreshToken` is not.
-// because the accessToken is needed by the server (`req.headers.authorization`) to
-// grant access. Refresh token is used explictly to refresh the token
-export function createTokens(document: UserDocument): AuthTokenResult {
+interface TokenOptions {
+  refreshToken: { expiresIn: number };
+  accessToken: { expiresIn: number };
+}
+
+function min(...nums: (number | undefined)[]) {
+  return Math.min(
+    ...nums.filter<number>((x): x is number => typeof x !== 'undefined'),
+  );
+}
+
+export function createTokens(
+  document: UserDocument,
+  options?: Partial<TokenOptions>,
+): AuthTokenResult {
   const user = compact({
     _id: document._id,
     username: document.username,
@@ -28,11 +41,17 @@ export function createTokens(document: UserDocument): AuthTokenResult {
   };
 
   const refreshToken = jwt.sign(data, secret, {
-    expiresIn: REFRESH_TOKEN_EXPIRY_SECONDS,
+    expiresIn: min(
+      options?.refreshToken?.expiresIn || REFRESH_TOKEN_EXPIRY_SECONDS,
+      REFRESH_TOKEN_EXPIRY_SECONDS,
+    ),
   });
 
   const accessToken = jwt.sign(data, secret, {
-    expiresIn: ACCESS_TOKEN_EXPIRY_SECONDS,
+    expiresIn: min(
+      options?.accessToken?.expiresIn || ACCESS_TOKEN_EXPIRY_SECONDS,
+      ACCESS_TOKEN_EXPIRY_SECONDS,
+    ),
   });
 
   return {

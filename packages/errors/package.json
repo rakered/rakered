@@ -17,7 +17,6 @@
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand"
   },
   "files": [
-    "src",
     "lib"
   ],
   "keywords": [],

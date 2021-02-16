@@ -1,12 +1,12 @@
 import hash, { HashResult } from '@rakered/hash';
 
 const parsers = {
-  'datetime-local': (el) => new Date(el.value),
+  'datetime-local': (el) => (el.value === '' ? undefined : new Date(el.value)),
   checkbox: (el) => Boolean(el.checked),
-  number: (el) => Number(el.value),
-  password: (el) => hash(el.value),
+  number: (el) => (el.value === '' ? undefined : Number(el.value)),
+  password: (el) => (el.value === '' ? undefined : hash(el.value)),
   radio: (el) => (el.checked ? el.value : undefined),
-  range: (el) => Number(el.value),
+  range: (el) => (el.value === '' ? undefined : Number(el.value)),
   text: (el) => el.value.trim(),
 };
 

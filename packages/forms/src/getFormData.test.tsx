@@ -54,6 +54,7 @@ test('coerce types', async () => {
     <input type="datetime-local" name="date" value="2021-02-15T15:50:00" />
     <input type="checkbox" name="checkbox" checked="checked" />
     <input type="number" name="number" value="3" />
+    <input type="number" name="emptyNumber" />
     <input type="password" name="password" value="hunter2" />
     <input type="radio" name="radio" value="on" checked />
     <input type="radio" name="radio" value="off" />
@@ -66,6 +67,7 @@ test('coerce types', async () => {
   expect(data.date).toBeInstanceOf(Date);
   expect(data.checkbox).toEqual(true);
   expect(data.number).toEqual(3);
+  expect(data.emptyNumber).toEqual(undefined);
   expect(data.password).toEqual({
     digest: 'f52fbd32b2b3b86ff88ef6c490628285f482af15ddcb29541f94bcf526a3f6c7',
     algorithm: 'sha-256',

@@ -7,7 +7,7 @@ const parsers = {
   password: (el) => hash(el.value),
   radio: (el) => (el.checked ? el.value : undefined),
   range: (el) => Number(el.value),
-  text: (el) => el.value,
+  text: (el) => el.value.trim(),
 };
 
 // rename the type, as that makes more sense in this context
@@ -37,7 +37,30 @@ export function getFormData<T extends FormData>(
     }
 
     const parse = parsers[element.type] || parsers.text;
-    data[element.name] = parse(element) ?? data[element.name] ?? undefined;
+    const value = parse(element) ?? undefined;
+
+    if (typeof value === 'undefined') {
+      continue;
+    }
+
+    // a[b][c] becomes [ a, b, c ]
+    const path = element.name.replace(/\[([^\]]+)?\]/g, '.$1').split('.');
+    let pointer = data;
+
+    // walk the path, and create objects and arrays where required
+    for (let i = 0; i < path.length - 1; i++) {
+      // empty strings and numeric values, indicate arrays
+      pointer[path[i]] =
+        pointer[path[i]] || (/^$|^[0-9]*$/.test(path[i + 1]) ? [] : {});
+
+      pointer = pointer[path[i]];
+    }
+
+    if (Array.isArray(pointer)) {
+      pointer.push(value);
+    } else {
+      pointer[path[path.length - 1]] = value;
+    }
   }
 
   return data as T;

@@ -19,7 +19,7 @@ const onSubmit = (event) => {
 <form onSubmit={onSubmit}>
   <input name="user" />
   <input name="password" type="password" />
-</form>
+</form>;
 ```
 
 Because we often want to wrap submit handlers between `event.preventDefault()` and `return false`, there is a `handleSubmit` helper that does exactly that.
@@ -33,7 +33,32 @@ const onSubmit = handleSubmit((values) => {
 
 <form onSubmit={onSubmit}>
   <input name="user" />
+</form>;
+```
+
+### Path expansions
+
+Where applicable, input names will be expanded to object structures
+
+```js
+<form onSubmit={onSubmit}>
+  <input name="user.name" value="Stephan Meijer" />
+  <input name="user.age" type="number" value="34" />
+  <input name="hobbies[]" value="chess" />
+  <input name="hobbies[]" value="art" />
 </form>
+```
+
+serializes to:
+
+```json5
+{
+  user: {
+    name: 'Stephan Meijer',
+    age: 34,
+  },
+  hobbies: ['chess', 'art'],
+}
 ```
 
 ### Type Coercion
@@ -69,7 +94,7 @@ const signup = handleSubmit<User>((values) => {
 <form onSubmit={signup}>
   <input name="user" />
   <input name="age" type="number" />
-</form>
+</form>;
 ```
 
 [rakered/hash]: https://github.com/rakered/rakered/tree/main/packages/hash

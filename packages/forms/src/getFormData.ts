@@ -2,7 +2,8 @@ import hash, { HashResult } from '@rakered/hash';
 
 const parsers = {
   'datetime-local': (el) => (el.value === '' ? undefined : new Date(el.value)),
-  checkbox: (el) => Boolean(el.checked),
+  checkbox: (el) =>
+    Boolean(el.checked) && el.value !== 'on' ? el.value : Boolean(el.checked),
   number: (el) => (el.value === '' ? undefined : Number(el.value)),
   password: (el) => (el.value === '' ? undefined : hash(el.value)),
   radio: (el) => (el.checked ? el.value : undefined),
@@ -57,6 +58,11 @@ export function getFormData<T extends FormData>(
     }
 
     if (Array.isArray(pointer)) {
+      // don't push checkboxes without values into array
+      if (typeof value === 'boolean') {
+        continue;
+      }
+
       pointer.push(value);
     } else {
       pointer[path[path.length - 1]] = value;

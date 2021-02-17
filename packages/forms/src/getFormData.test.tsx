@@ -49,6 +49,26 @@ test('correctly expands flattened names to object structures', async () => {
   });
 });
 
+test('checkboxes  use value when provided', async () => {
+  const event = await submitForm(`
+    <input name="empty" type="checkbox" />
+    <input name="checked" type="checkbox" checked />
+    <input name="valued" type="checkbox" value="with-value" checked />
+    
+    <input name="arr[]" type="checkbox" value="red" checked />
+    <input name="arr[]" type="checkbox" value="white" />
+    <input name="arr[]" type="checkbox" value="blue" checked />
+  `);
+
+  const data = getFormData(event);
+  expect(data).toEqual({
+    empty: false,
+    checked: true,
+    valued: 'with-value',
+    arr: ['red', 'blue'],
+  });
+});
+
 test('coerce types', async () => {
   const event = await submitForm(`
     <input type="datetime-local" name="date" value="2021-02-15T15:50:00" />

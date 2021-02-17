@@ -19,8 +19,16 @@ export interface Event {
   preventDefault(): void;
 }
 
+export type DataType =
+  | string
+  | number
+  | boolean
+  | Date
+  | HashedPassword
+  | FormData;
+
 export interface FormData {
-  [key: string]: string | number | Date | HashedPassword;
+  [key: string]: DataType | DataType[];
 }
 
 export function getFormData<T extends FormData>(

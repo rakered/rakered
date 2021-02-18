@@ -5,6 +5,7 @@ import {
   Title,
   Paragraph,
   CallToAction,
+  Container,
   Footer,
   render,
 } from '@rakered/email';
@@ -31,18 +32,16 @@ You have received this notification because you have signed up for ${siteName}.
 
 export function EnrollmentEmail({
   siteName,
-  siteUrl,
   logoUrl,
   magicLink,
 }: EmailOptions) {
   return (
     <Email>
-      <Content>
-        <Header
-          logo={logoUrl}
-          action={{ label: `Go to ${siteName}`, url: siteUrl }}
-        />
+      <Container>
+        <Header logo={logoUrl} />
+      </Container>
 
+      <Content>
         <Title>Create Your Account</Title>
 
         <Paragraph>

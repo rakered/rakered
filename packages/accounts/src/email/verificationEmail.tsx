@@ -5,6 +5,7 @@ import {
   Title,
   Paragraph,
   CallToAction,
+  Container,
   Footer,
   render,
 } from '@rakered/email';
@@ -37,12 +38,11 @@ export function VerificationEmail({
 }: EmailOptions) {
   return (
     <Email>
-      <Content>
-        <Header
-          logo={logoUrl}
-          action={{ label: `Go to ${siteName}`, url: siteUrl }}
-        />
+      <Container>
+        <Header logo={logoUrl} />
+      </Container>
 
+      <Content>
         <Title>Confirm Your Email</Title>
 
         <Paragraph>

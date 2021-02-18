@@ -12,12 +12,12 @@ export default {
     },
 
     inner: {
-      height: 40,
+      height: 60,
     },
 
     logo: {
       paddingTop: 5,
-      height: 30,
+      height: 48,
     },
 
     button: {
@@ -48,6 +48,15 @@ export default {
     },
   },
 
+  container: {
+    outer: {
+      width: 560,
+      maxWidth: 560,
+      minWidth: 560,
+      margin: '0 auto',
+    },
+  },
+
   content: {
     outer: {
       borderRadius: 8,
@@ -62,7 +71,6 @@ export default {
   },
 
   title: {
-    paddingTop: 40,
     color: '#050038',
     fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
     fontSize: 36,

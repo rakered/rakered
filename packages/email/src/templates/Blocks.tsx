@@ -19,6 +19,18 @@ export function CallToAction({ href, children }) {
   );
 }
 
+export function Container({ children }) {
+  const style = useTheme('container');
+
+  return (
+    <div style={style.outer}>
+      <div style={style.inner}>
+        <Grid>{children}</Grid>
+      </div>
+    </div>
+  );
+}
+
 export function Content({ children }) {
   const style = useTheme('content');
 

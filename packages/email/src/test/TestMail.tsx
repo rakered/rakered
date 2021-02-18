@@ -1,6 +1,7 @@
 import {
   CallToAction,
   Code,
+  Container,
   Content,
   Email,
   Footer,
@@ -12,12 +13,11 @@ import {
 function TestMail({ code, siteName, siteUrl }) {
   return (
     <Email>
-      <Content>
-        <Header
-          logo="https://placeholder.com/wp-content/uploads/2018/10/placeholder.com-logo4.png"
-          action={{ label: `Go to ${siteName}`, url: siteUrl }}
-        />
+      <Container>
+        <Header logo="https://rake.red/rakered-black.png" />
+      </Container>
 
+      <Content>
         <Title>Complete Registration</Title>
 
         <Paragraph>

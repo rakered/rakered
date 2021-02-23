@@ -14,7 +14,10 @@
     "build": "rimraf ./lib *.tsbuildinfo && tsc",
     "prepare": "npm run build",
     "test": "jest --coverage --runInBand",
-    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand"
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand",
+    "bump:patch": "npm version patch -m 'release(accounts): cut the %s release'",
+    "bump:minor": "npm version minor -m 'release(accounts): cut the %s release'",
+    "bump:major": "npm version major -m 'release(accounts): cut the %s release'"
   },
   "files": [
     "lib"

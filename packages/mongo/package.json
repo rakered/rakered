@@ -16,7 +16,10 @@
     "clean": "rimraf \"./lib\" \"*.tsbuildinfo\"",
     "prepare": "npm run build",
     "test": "jest --coverage --runInBand ./src",
-    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand"
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand",
+    "bump:patch": "npm version patch -m 'release(mongo): cut the %s release'",
+    "bump:minor": "npm version minor -m 'release(mongo): cut the %s release'",
+    "bump:major": "npm version major -m 'release(mongo): cut the %s release'"
   },
   "files": [
     "lib"

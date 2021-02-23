@@ -15,7 +15,10 @@
     "prepare": "npm run build",
     "test": "jest --coverage --runInBand ./src",
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest --runInBand",
-    "test:send": "ts-node scripts/sendTestMail.tsx smtp://project.3:secret.3@localhost:1025"
+    "test:send": "ts-node scripts/sendTestMail.tsx smtp://project.3:secret.3@localhost:1025",
+    "bump:patch": "npm version patch -m 'release(email): cut the %s release'",
+    "bump:minor": "npm version minor -m 'release(email): cut the %s release'",
+    "bump:major": "npm version major -m 'release(email): cut the %s release'"
   },
   "files": [
     "lib"

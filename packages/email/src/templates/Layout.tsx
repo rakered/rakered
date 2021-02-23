@@ -1,6 +1,6 @@
-import { ComponentChildren } from 'preact';
+import { ReactNode, CSSProperties } from 'react';
 
-const styles = {
+const styles: Record<string, CSSProperties> = {
   table: {
     width: '100%',
     borderCollapse: 'collapse',
@@ -12,7 +12,7 @@ function ensureArray(arr) {
 }
 
 interface CellProps {
-  children?: ComponentChildren;
+  children?: ReactNode;
   style?: Record<string, string>;
   className?: string;
   colSpan?: number;
@@ -29,11 +29,16 @@ function Cell({ children, style = {}, className, colSpan }: CellProps) {
 function Row({ children, style = {} }) {
   const content = ensureArray(children)
     .filter(Boolean)
-    .map((el, _, { length }) => {
+    .map((el, idx, { length }) => {
       if (el.type === Cell) {
         return el;
       }
-      return <Cell colSpan={length === 1 ? 12 : undefined}>{el}</Cell>;
+
+      return (
+        <Cell key={idx} colSpan={length === 1 ? 12 : undefined}>
+          {el}
+        </Cell>
+      );
     });
 
   return <tr style={style}>{content}</tr>;
@@ -42,9 +47,9 @@ function Row({ children, style = {} }) {
 function Grid({ children, style = {} }) {
   const content = ensureArray(children)
     .filter(Boolean)
-    .map((el) => {
+    .map((el, idx) => {
       if (!el) {
-        return;
+        return null;
       }
 
       // We want this content the be on it's own row.
@@ -54,16 +59,17 @@ function Grid({ children, style = {} }) {
 
       // The content is all inside a single cell (so a row)
       if (el.type === Cell) {
-        return <Row>{el}</Row>;
+        return <Row key={idx}>{el}</Row>;
       }
 
       // The content is one cell inside it's own row
       return (
-        <Row>
+        <Row key={idx}>
           <Cell colSpan={12}>{el}</Cell>
         </Row>
       );
-    });
+    })
+    .filter(Boolean);
 
   return (
     <table

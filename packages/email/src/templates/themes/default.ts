@@ -98,7 +98,7 @@ export default {
       backgroundColor: '#f3f4f8',
       borderRadius: 8,
       color: '#050038',
-      fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif;',
+      fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
       fontSize: 36,
       fontWeight: 500,
       height: 128,

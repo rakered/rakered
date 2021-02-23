@@ -10,11 +10,16 @@ import {
   Title,
 } from '../templates';
 
-function TestMail({ code, siteName, siteUrl }) {
+function TestMail({
+  code,
+  siteName,
+  siteUrl = 'https://rake.red',
+  logoUrl = 'https://rake.red/rakered-black.png',
+}) {
   return (
     <Email>
       <Container>
-        <Header logo="https://rake.red/rakered-black.png" />
+        <Header logo={logoUrl} />
       </Container>
 
       <Content>
@@ -33,7 +38,7 @@ function TestMail({ code, siteName, siteUrl }) {
         <CallToAction href="#">Confirm your email</CallToAction>
 
         <Paragraph>
-          If you didn't create the account, please ignore this msg
+          If you did not create the account, please ignore this msg
         </Paragraph>
       </Content>
 

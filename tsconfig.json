@@ -13,8 +13,7 @@
     "declaration": true,
     "baseUrl": "./packages",
     "sourceMap": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact"
+    "jsx": "react-jsx"
   },
   "include": ["src", "typings", "global.d.ts"],
   "exclude": ["node_modules", "test/**"],

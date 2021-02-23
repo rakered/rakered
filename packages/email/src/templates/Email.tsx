@@ -1,5 +1,4 @@
-import { createContext, ComponentChildren } from 'preact';
-import { useContext } from 'preact/hooks';
+import { createContext, ReactNode, useContext } from 'react';
 import defaultTheme from './themes/default';
 
 export const context = createContext({});
@@ -16,7 +15,7 @@ export function Email({
   children,
 }: {
   theme?: Record<string, any>;
-  children?: ComponentChildren;
+  children?: ReactNode;
 }) {
   return (
     <Provider value={theme}>

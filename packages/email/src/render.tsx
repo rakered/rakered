@@ -1,7 +1,7 @@
-import renderToString from 'preact-render-to-string';
-import { VNode } from 'preact';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { ReactNode } from 'react';
 
-export function render(vdom: VNode): string {
+export function render(vdom: ReactNode): string {
   return `<!doctype html>
     <html lang="en">
       <head>
@@ -10,7 +10,7 @@ export function render(vdom: VNode): string {
         <title></title>
       </head>
       <body style="width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0;">
-         ${renderToString(vdom)}
+         ${renderToStaticMarkup(vdom)}
       </body>
     </html>`;
 }

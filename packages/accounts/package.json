@@ -24,14 +24,14 @@
   ],
   "keywords": [],
   "dependencies": {
-    "@rakered/email": "^1.1.0",
+    "@rakered/email": "^1.2.0",
     "@rakered/errors": "^1.1.0",
     "@rakered/mongo": "^1.2.0",
     "argon2": "^0.27.1",
     "bcryptjs": "^2.4.3",
     "common-tags": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
-    "preact": "^10.5.11",
+    "react": "^17.0.1",
     "the-big-username-blacklist": "^1.5.2"
   },
   "devDependencies": {
@@ -39,6 +39,7 @@
     "@types/jest": "^26.0.20",
     "@types/mongodb": "^3.6.3",
     "@types/node": "^13.13.40",
+    "@types/react": "^17.0.2",
     "jest": "^26.6.3",
     "jest-partial": "^1.0.1",
     "rimraf": "^3.0.2",

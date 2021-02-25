@@ -7,9 +7,9 @@ import {
 
 import { isValidEmail, normalizeEmail } from '../lib/email';
 import { getPasswordString, SHA256 } from '../lib/password';
-import { Context, AuthTokenResult, Password } from '../types';
+import { Context, AuthTokenResult, Password, InviteUserResult } from '../types';
 import { isDuplicateKeyError } from '@rakered/mongo/lib/utils';
-import { createTokens } from '../lib/jwt';
+import { cleanUser, createTokens } from '../lib/jwt';
 import picoid from 'picoid';
 import { UserInputError } from '@rakered/errors';
 
@@ -35,7 +35,7 @@ async function createUser(
 async function createUser(
   user: InviteUserDocument,
   context: Context,
-): Promise<void>;
+): Promise<InviteUserResult>;
 
 /**
  * Create a new user account, when no password has been provided, we assume that
@@ -45,7 +45,7 @@ async function createUser(
 async function createUser(
   user: CreateUserDocument | InviteUserDocument,
   context: Context,
-): Promise<AuthTokenResult | void> {
+): Promise<AuthTokenResult | InviteUserResult> {
   const { collection } = context;
   const email = user.email ? normalizeEmail(user.email) : null;
   const name = user.name ? user.name.trim() : null;
@@ -140,7 +140,7 @@ async function createUser(
     return newTokens;
   }
 
-  return;
+  return { user: cleanUser(doc) };
 }
 
 export default createUser;

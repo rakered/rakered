@@ -12,6 +12,7 @@ import {
   Context,
   TokenUrls,
   EmailDoc,
+  InviteUserResult,
 } from './types';
 import resetPassword, { ResetPasswordDocument } from './methods/resetPassword';
 import verifyEmail, { VerifyEmailDocument } from './methods/verifyEmail';
@@ -24,10 +25,12 @@ import revokeToken from './methods/revokeToken';
 import sendEnrollmentEmail from './methods/sendEnrollmentEmail';
 import sendVerificationEmail from './methods/sendVerificationEmail';
 import sendResetPasswordEmail from './methods/sendResetPasswordEmail';
+import enrollUser, { EnrollUserDocument } from './methods/enrollUser';
 
 export interface Accounts {
-  createUser(user: InviteUserDocument): Promise<void>;
+  createUser(user: InviteUserDocument): Promise<InviteUserResult>;
   createUser(user: CreateUserDocument): Promise<AuthTokenResult>;
+  enrollUser(user: EnrollUserDocument): Promise<AuthTokenResult>;
   setUsername(options: setUsernameDocument): Promise<void>;
   addEmail(options: addEmailDocument): Promise<void>;
   removeEmail(options: removeEmailDocument): Promise<void>;
@@ -149,7 +152,7 @@ export function init(options: Options = defaultOptions): Accounts {
 
   return {
     createUser: (user) => createUser(user, context),
-
+    enrollUser: (user) => enrollUser(user, context),
     setUsername: (options) => setUsername(options, context),
     addEmail: (options) => addEmail(options, context),
     removeEmail: (options) => removeEmail(options, context),

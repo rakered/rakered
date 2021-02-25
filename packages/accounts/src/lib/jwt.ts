@@ -20,18 +20,21 @@ function min(...nums: (number | undefined)[]) {
   );
 }
 
-export function createTokens(
-  document: UserDocument,
-  options?: Partial<TokenOptions>,
-): AuthTokenResult {
-  const user = compact({
+export function cleanUser(document: UserDocument): User {
+  return compact({
     _id: document._id,
     username: document.username,
     email: document.emails?.[0]?.address,
     name: document.name,
     roles: (document.roles || []).filter(Boolean),
   }) as User;
+}
 
+export function createTokens(
+  document: UserDocument,
+  options?: Partial<TokenOptions>,
+): AuthTokenResult {
+  const user = cleanUser(document);
   const secret = process.env.JWT_SECRET || 'hunter2';
 
   const data = {

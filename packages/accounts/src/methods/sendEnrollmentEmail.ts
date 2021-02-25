@@ -11,7 +11,13 @@ async function sendEnrollmentEmail(
   identity: EmailDoc,
   context: Context,
 ): Promise<void> {
-  const { token } = await createPasswordResetToken(identity, context);
+  const { token } = await createPasswordResetToken(
+    {
+      ...identity,
+      type: 'enroll',
+    },
+    context,
+  );
 
   const options = {
     ...context.email,

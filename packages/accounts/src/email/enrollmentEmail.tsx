@@ -18,9 +18,9 @@ export const getEnrollmentText = ({
   magicLink,
   siteName,
 }: EmailOptions) => stripIndent`
-Create Your Account
+Setup Your Account
 
-Please use the link below to create your account on ${siteName}.
+Please use the link below to setup your account on ${siteName}.
  
 If you did not expect to be invited, please ignore this message.
 
@@ -42,13 +42,13 @@ export function EnrollmentEmail({
       </Container>
 
       <Content>
-        <Title>Create Your Account</Title>
+        <Title>Setup Your Account</Title>
 
         <Paragraph>
-          Please click on the button below to create your account.
+          Please click on the button below to setup your account.
         </Paragraph>
 
-        <CallToAction href={magicLink}>Create account</CallToAction>
+        <CallToAction href={magicLink}>Setup account</CallToAction>
 
         <Paragraph>
           If you did not expect to be invited, please ignore this message.

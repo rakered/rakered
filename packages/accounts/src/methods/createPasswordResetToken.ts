@@ -7,10 +7,11 @@ import { UserInputError } from '@rakered/errors';
 
 export interface PasswordResetDocument {
   email: string;
+  type?: 'reset' | 'enroll';
 }
 
 async function createPasswordResetToken(
-  { email }: PasswordResetDocument,
+  { email, type }: PasswordResetDocument,
   { collection }: Context,
 ): Promise<TokenResult> {
   if (typeof email !== 'string' || !isValidEmail(email)) {
@@ -22,7 +23,7 @@ async function createPasswordResetToken(
   const reset = {
     token: SHA256(token),
     email: normalizeEmail(email),
-    reason: 'reset',
+    reason: type || 'reset',
     when: new Date(),
   };
 

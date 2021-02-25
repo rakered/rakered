@@ -34,6 +34,13 @@ export interface User {
   roles: string[];
 }
 
+export interface InviteUserResult {
+  user: {
+    _id: string;
+    email: string;
+  };
+}
+
 export interface AuthTokenResult {
   user: User;
   refreshToken: string;

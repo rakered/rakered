@@ -71,7 +71,7 @@ export function createVerificationEmail(options: EmailOptions) {
 
   const text = getVerificationText(options);
   const html = render(<VerificationEmail {...options} />);
-  const subject = `${options.siteName} – Confirm Your Email`;
+  const subject = `${options.siteName} – confirm your email`;
 
   return { to, from, subject, text, html };
 }

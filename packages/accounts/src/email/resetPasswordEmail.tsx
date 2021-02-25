@@ -69,7 +69,7 @@ export function createResetPasswordEmail(options: EmailOptions) {
 
   const text = getResetPasswordText(options);
   const html = render(<ResetPasswordEmail {...options} />);
-  const subject = `${options.siteName} – Reset Your Password`;
+  const subject = `${options.siteName} – reset your password`;
 
   return { to, from, subject, text, html };
 }

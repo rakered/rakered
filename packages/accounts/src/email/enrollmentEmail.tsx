@@ -69,7 +69,7 @@ export function createEnrollmentEmail(options: EmailOptions) {
 
   const text = getEnrollmentText(options);
   const html = render(<EnrollmentEmail {...options} />);
-  const subject = `${options.siteName} – Create Your Account`;
+  const subject = `${options.siteName} – setup your account`;
 
   return { to, from, subject, text, html };
 }

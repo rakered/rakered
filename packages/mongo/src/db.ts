@@ -11,7 +11,9 @@ export type Db = MongoDb & {
   disconnect: (force?: boolean) => Promise<void>;
 } & Record<string, Collection<any>>;
 
-export type Options = MongoClientOptions;
+export type Options = MongoClientOptions & {
+  autoDisconnect?: boolean;
+};
 
 export function create<TDb extends Db>(
   uri: string = process.env.MONGO_URL || 'mongodb://localhost:27017',
@@ -69,6 +71,12 @@ export function create<TDb extends Db>(
     }
 
     await client.close(force);
+  }
+
+  if (options?.autoDisconnect !== false) {
+    process.on('exit', () => {
+      disconnect(true).catch(() => undefined);
+    });
   }
 
   return new Proxy(

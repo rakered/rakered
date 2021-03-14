@@ -1,13 +1,13 @@
+import { addSmokeListener } from '../send';
+
 async function smokeTest(fn) {
   let msg;
-  const log = console.log;
-  console.log = jest.fn((data) => {
-    msg = data;
+
+  addSmokeListener((email) => {
+    msg = email;
   });
 
   await Promise.resolve(fn);
-
-  console.log = log;
   return msg;
 }
 

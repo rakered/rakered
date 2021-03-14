@@ -46,6 +46,12 @@ function getTransport() {
 
 let devModeMailId = 0;
 
+const listeners = new Set<(email: string) => void>();
+
+export const addSmokeListener = (fn) => {
+  listeners.add(fn);
+};
+
 async function devModeSend(mail: SendMailOptions) {
   const messageId = (++devModeMailId).toString().padStart(3, '0');
 
@@ -61,7 +67,15 @@ async function devModeSend(mail: SendMailOptions) {
   const footer = '====== END MAIL   #' + messageId + ' ======';
 
   const output = [header, content, footer].join('\n');
-  console.log(output);
+  if (listeners.size === 0) {
+    console.log(output);
+  }
+
+  for (const listener of listeners) {
+    listener(output);
+    listeners.delete(listener);
+  }
+
   return;
 }
 

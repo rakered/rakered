@@ -11,7 +11,6 @@
     "esModuleInterop": true,
     "noImplicitAny": false,
     "declaration": true,
-    "baseUrl": "./packages",
     "sourceMap": true,
     "jsx": "react-jsx"
   },
@@ -20,7 +19,9 @@
   "references": [
     { "path": "packages/accounts" },
     { "path": "packages/email" },
+    { "path": "packages/errors" },
     { "path": "packages/hash" },
-    { "path": "packages/mongo" }
+    { "path": "packages/mongo" },
+    { "path": "packages/react" }
   ]
 }

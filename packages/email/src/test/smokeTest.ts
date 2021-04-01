@@ -7,8 +7,8 @@ async function smokeTest(fn) {
     msg = email;
   });
 
-  await Promise.resolve(fn);
-  return msg;
+  const result = await Promise.resolve(fn);
+  return [msg, result];
 }
 
 export default smokeTest;

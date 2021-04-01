@@ -67,13 +67,14 @@ async function devModeSend(mail: SendMailOptions) {
   const footer = '====== END MAIL   #' + messageId + ' ======';
 
   const output = [header, content, footer].join('\n');
-  if (listeners.size === 0) {
-    console.log(output);
-  }
 
   for (const listener of listeners) {
     listener(output);
     listeners.delete(listener);
+  }
+
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(output);
   }
 
   return;

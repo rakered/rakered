@@ -37,7 +37,7 @@ test('attempts to send the mail when MAIL_URL is set', async () => {
 });
 
 test('prints the mail message when MAIL_URL not set', async () => {
-  const msg = await smokeTest(send(mail));
+  const [msg] = await smokeTest(send(mail));
   expect(msg).toMatch('hi there!');
 });
 

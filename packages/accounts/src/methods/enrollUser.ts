@@ -19,9 +19,8 @@ export interface EnrollUserDocument {
 }
 
 /**
- * Create a new user account, when no password has been provided, we assume that
- * we're dealing with an invite. In that case, no refresh and access tokens are
- * returned.
+ * Complete user registration with the help of an invite token that has been
+ * send earlier on.
  */
 async function enrollUser(
   user: EnrollUserDocument,
@@ -32,6 +31,10 @@ async function enrollUser(
   const name = user.name ? user.name.trim() : null;
   const username = user.username ? user.username.trim() : null;
   const passwordString = getPasswordString(user.password);
+
+  if (!user.token) {
+    throw new UserInputError(`Token must be provided.`);
+  }
 
   if (typeof username === 'string') {
     if (isReservedUsername(username)) {
@@ -74,7 +77,7 @@ async function enrollUser(
     );
 
     if (!value) {
-      throw new UserInputError(`Invalid token provided`);
+      throw new UserInputError(`Invalid token provided.`);
     }
 
     const tokens = createTokens(value);

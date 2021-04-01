@@ -1,21 +1,49 @@
 import { init } from './accounts';
-import { stripIndent } from 'common-tags';
+
+const ENV = { ...process.env };
+
+beforeEach(() => {
+  process.env.NODE_ENV = ENV.NODE_ENV;
+  process.env.MAIL_URL = ENV.MAIL_URL;
+  process.env.BASE_URL = ENV.BASE_URL;
+  process.env.LOGO_URL = ENV.LOGO_URL;
+  process.env.EMAIL_FROM = ENV.EMAIL_FROM;
+});
 
 test('Throws error when trying to init in production, without email & token options', async () => {
-  const env = process.env.NODE_ENV;
   process.env.NODE_ENV = 'production';
+  delete process.env.MAIL_URL;
 
-  expect(init).toThrow(stripIndent`
-    ERROR: The following errors should be fixed when running @rakered/accounts in production
+  expect(init).toThrow(
+    `'mail url' should be provided via either env.MAIL_URL or env.RAKERED_MAIL_URL`,
+  );
+});
 
-      - options.email must be provided.
-      - env.MAIL_URL must be provided.
-      - env.JWT_SECRET must be provided.
+test('Throws error when trying to init without email.from', async () => {
+  delete process.env.EMAIL_FROM;
 
-    Please consult the docs if you're unsure how to fix this.
-`);
+  expect(() =>
+    init({
+      email: {
+        from: '',
+        siteUrl: 'https://example.com',
+        siteName: '',
+        logoUrl: '',
+      },
+    }),
+  ).toThrow(
+    `'email from' should be provided via either env.EMAIL_FROM or env.RAKERED_EMAIL_FROM`,
+  );
+});
 
-  process.env.NODE_ENV = env;
+test('Throws error when trying to init without email.siteUrl', async () => {
+  delete process.env.BASE_URL;
+
+  expect(() =>
+    init({ email: { from: 'hi@me', siteUrl: '', siteName: '', logoUrl: '' } }),
+  ).toThrow(
+    `'base url' should be provided via either env.BASE_URL or env.RAKERED_BASE_URL`,
+  );
 });
 
 test('Default collection options include pkPrefx', async () => {

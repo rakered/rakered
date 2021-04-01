@@ -8,6 +8,7 @@ import {
   REFRESH_TOKEN_EXPIRY_SECONDS,
   REFRESH_TOKEN_MAX_EXPIRY_SECONDS,
 } from './constants';
+import { getOption } from './options';
 
 interface TokenOptions {
   refreshToken: { expiresIn: number };
@@ -35,7 +36,7 @@ export function createTokens(
   options?: Partial<TokenOptions>,
 ): AuthTokenResult {
   const user = cleanUser(document);
-  const secret = process.env.JWT_SECRET || 'hunter2';
+  const secret = getOption('JWT_SECRET');
 
   const data = {
     ...user,
@@ -79,7 +80,7 @@ export function verifyToken(
   options?: { ignoreExpiration?: boolean },
 ): TokenPayload | null {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET || 'hunter2', options);
+    return jwt.verify(token, getOption('JWT_SECRET'), options);
   } catch (ex) {
     return null;
   }

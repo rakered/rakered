@@ -23,16 +23,16 @@ afterAll(async () => {
 const user = { email: 'hunter@example.com' };
 
 test('can send enrollment email', async () => {
-  const result = await smokeTest(accounts.sendEnrollmentEmail(user));
+  const [result] = await smokeTest(accounts.sendEnrollmentEmail(user));
   expect(result).toContain('To: hunter@example.com');
 });
 
 test('can send verification email', async () => {
-  const result = await smokeTest(accounts.sendVerificationEmail(user));
+  const [result] = await smokeTest(accounts.sendVerificationEmail(user));
   expect(result).toContain('To: hunter@example.com');
 });
 
 test('can send reset password email', async () => {
-  const result = await smokeTest(accounts.sendResetPasswordEmail(user));
+  const [result] = await smokeTest(accounts.sendResetPasswordEmail(user));
   expect(result).toContain('To: hunter@example.com');
 });

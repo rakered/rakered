@@ -21,7 +21,7 @@ afterAll(async () => {
 });
 
 test('can send reset password email', async () => {
-  const result = await smokeTest(
+  const [result] = await smokeTest(
     accounts.sendResetPasswordEmail({ email: 'hunter@example.com' }),
   );
   expect(result).toContain('To: hunter@example.com');

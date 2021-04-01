@@ -7,12 +7,12 @@ import createUser, {
 } from './methods/createUser';
 import login, { LoginDocument } from './methods/login';
 import {
-  UserDocument,
   AuthTokenResult,
   Context,
-  TokenUrls,
   EmailDoc,
   InviteUserResult,
+  TokenUrls,
+  UserDocument,
 } from './types';
 import resetPassword, { ResetPasswordDocument } from './methods/resetPassword';
 import verifyEmail, { VerifyEmailDocument } from './methods/verifyEmail';
@@ -26,6 +26,7 @@ import sendEnrollmentEmail from './methods/sendEnrollmentEmail';
 import sendVerificationEmail from './methods/sendVerificationEmail';
 import sendResetPasswordEmail from './methods/sendResetPasswordEmail';
 import enrollUser, { EnrollUserDocument } from './methods/enrollUser';
+import { checkOption, getOption } from './lib/options';
 
 export interface Accounts {
   createUser(user: InviteUserDocument): Promise<InviteUserResult>;
@@ -72,53 +73,44 @@ function createUrlResolvers(siteUrl): TokenUrls {
   };
 }
 
-export const defaultOptions: { email: EmailSettings; urls: TokenUrls } = {
+export const defaultOptions: {
+  email: EmailSettings;
+  urls: TokenUrls;
+} = {
   email: {
-    from: 'noreply@example.com', // don't set this to rake.red! (spam reasons)
-    siteName: 'rake.red',
-    siteUrl: 'https://rake.red',
-    logoUrl: 'https://github.com/rakered/rakered/raw/main/docs/logo.png',
+    from: getOption('EMAIL_FROM', ''),
+    siteName: getOption('SITE_NAME', ''),
+    siteUrl: getOption('BASE_URL', ''),
+    logoUrl: getOption('LOGO_URL', ''),
   },
 
-  urls: createUrlResolvers('https://example.com'),
+  urls: createUrlResolvers(getOption('BASE_URL', 'https://example.com')),
 };
 
-function guardProduction(options: Options) {
-  if (process.env.NODE_ENV !== 'production') {
-    return;
+function checkOptions({ email }) {
+  if (process.env.NODE_ENV === 'production') {
+    checkOption('MAIL_URL');
   }
 
-  const errors: string[] = [];
-
-  if (!options.email || options.email === defaultOptions.email) {
-    errors.push('options.email must be provided.');
+  if (!email.from) {
+    checkOption('EMAIL_FROM');
   }
 
-  if (!process.env.MAIL_URL) {
-    errors.push('env.MAIL_URL must be provided.');
+  if (!email.siteUrl) {
+    checkOption('BASE_URL');
   }
 
-  if (!process.env.JWT_SECRET) {
-    errors.push('env.JWT_SECRET must be provided.');
-  }
-
-  if (errors.length > 0) {
-    let msg =
-      'ERROR: The following errors should be fixed when running @rakered/accounts in production\n\n';
-
-    for (const err of errors) {
-      msg += `  - ${err}\n`;
-    }
-
-    msg += `\nPlease consult the docs if you're unsure how to fix this.`;
-    throw new Error(msg);
-  }
+  checkOption('JWT_SECRET');
 }
-export function init(options: Options = defaultOptions): Accounts {
-  guardProduction(options);
 
-  const emailOptions = options.email || defaultOptions.email;
-  const urlOptions = options.urls || createUrlResolvers(emailOptions.siteUrl);
+export function init(options: Options = defaultOptions): Accounts {
+  const emailOptions = { ...defaultOptions.email, ...options.email };
+  const urlOptions = {
+    ...createUrlResolvers(emailOptions.siteUrl),
+    ...options.urls,
+  };
+
+  checkOptions({ email: emailOptions });
 
   let collection = options.collection;
   let db: Db;

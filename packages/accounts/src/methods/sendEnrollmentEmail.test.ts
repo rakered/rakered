@@ -21,7 +21,7 @@ afterAll(async () => {
 });
 
 test('can send enrollment email', async () => {
-  const result = await smokeTest(
+  const [result] = await smokeTest(
     accounts.sendEnrollmentEmail({ email: 'hunter@example.com' }),
   );
   expect(result).toContain('To: hunter@example.com');

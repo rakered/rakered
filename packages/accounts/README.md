@@ -15,15 +15,49 @@ const accounts = init();
 await accounts.createUser({ username: 'hunter', password: 'hunter2' });
 ```
 
-It's possible to use `init` without providing options, to get up and running FAST. That being said, it is required to configure some email stuff for production. Think `siteName`, `siteUrl`, or token based verification urls.
+Options can be provided in two ways, passing them as object to `init`, or by providing them as environment variables.
 
 ## Options
 
-There are various options available. In development mode, this library runs in zero config mode. When running in production, the following settings are required:
+There are various options available. In development mode, this library does not require a `MAIL_URL` to be set, instead emails will be logged to console.
 
-- `options.email` email options to be used to populate the mail template.
-- `env.MAIL_URL` the smtp url for the mail server to use.
-- `env.JWT_TOKEN` the secret to use to sign the jwt tokens.
+### Environment Variables
+
+Both `username` as well as `email` are optional, but one of those must be provided.
+
+- **MAIL_URL** _String_
+
+  The smtp url for the mail server to use.
+
+  Optional when running in development mode
+
+- **JWT_SECRET** _String_
+
+  The secret to sign the jwt tokens with.
+
+- **EMAIL_FROM** _String_
+
+  The email address that's being used as sender.
+
+  Optional if `options.email.from` is provided
+
+- **BASE_URL** _String_
+
+  The url that will be prefixed to magic urls and provided to the email template.
+
+  Optional if `options.email.siteUrl` is provided
+
+- **SITE_NAME** _String_
+
+  The site name that will be provided to the email template.
+
+  Optional if `options.email.siteName` is provided
+
+- **LOGO_URL** _String_
+
+  The url for the logo that will be shown in the email.
+
+  Optional if `options.email.logoUrl` is provided
 
 ### Collection
 

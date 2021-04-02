@@ -1,7 +1,12 @@
 {
   "name": "@rakered/hash",
   "version": "1.0.2",
-  "description": "",
+  "description": "A tiny, zero dependency, isomorphic SHA256 hashing algorithm.",
+  "keywords": [
+    "hash",
+    "browser",
+    "nodejs"
+  ],
   "main": "./lib/index.js",
   "source": "./src/index.ts",
   "license": "AGPL-3.0 OR COMMERCIAL",
@@ -22,7 +27,6 @@
   "files": [
     "lib"
   ],
-  "keywords": [],
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.20",

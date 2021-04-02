@@ -1,8 +1,9 @@
 {
-  "name": "mongod",
+  "name": "rakered",
+  "description": "The open source components from rake.red",
   "scripts": {
     "clean": "rimraf \"packages/**/dist\" \"packages/**/*.tsbuildinfo\"",
-    "start:db": "mongod --dbpath .db",
+    "start:db": "mongod --dbpath ../.db",
     "test": "lerna run test",
     "build": "lerna run build",
     "prepare": "npm run clean && npm run build",

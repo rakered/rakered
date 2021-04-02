@@ -1,7 +1,11 @@
 {
   "name": "@rakered/accounts",
   "version": "1.4.0",
-  "description": "",
+  "description": "An account package for managing user accounts in mongodb.",
+  "keywords": [
+    "nodejs",
+    "mongodb"
+  ],
   "main": "./lib/index.js",
   "source": "./src/index.ts",
   "license": "AGPL-3.0 OR COMMERCIAL",
@@ -22,7 +26,6 @@
   "files": [
     "lib"
   ],
-  "keywords": [],
   "dependencies": {
     "@rakered/email": "^1.3.1",
     "@rakered/errors": "^1.1.0",

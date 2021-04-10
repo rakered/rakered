@@ -21,18 +21,18 @@ function min(...nums: (number | undefined)[]) {
   );
 }
 
-export function cleanUser(document: UserDocument): User {
+export function cleanUser(document: UserDocument | User): User {
   return compact({
     _id: document._id,
     username: document.username,
-    email: document.emails?.[0]?.address,
+    email: 'email' in document ? document.email : document.emails?.[0]?.address,
     name: document.name,
     roles: (document.roles || []).filter(Boolean),
   }) as User;
 }
 
 export function createTokens(
-  document: UserDocument,
+  document: UserDocument | User,
   options?: Partial<TokenOptions>,
 ): AuthTokenResult {
   const user = cleanUser(document);

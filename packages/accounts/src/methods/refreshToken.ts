@@ -1,6 +1,6 @@
 import { SHA256 } from '../lib/password';
 import { Context, AuthTokenResult } from '../types';
-import { createTokens, verifyToken } from '../lib/jwt';
+import { cleanUser, createTokens, verifyToken } from '../lib/jwt';
 import { UserInputError } from '@rakered/errors';
 import {
   MAX_ACTIVE_REFRESH_TOKENS,
@@ -11,7 +11,7 @@ export type TokenDocument = { refreshToken: string; accessToken: string };
 
 async function refreshToken(
   tokens: TokenDocument,
-  { collection }: Context,
+  { collection, onLogin }: Context,
 ): Promise<AuthTokenResult> {
   if (!tokens?.accessToken || !tokens?.refreshToken) {
     throw new UserInputError('Incorrect token provided.');
@@ -32,12 +32,12 @@ async function refreshToken(
 
   const hashedToken = SHA256(tokens.refreshToken);
 
-  const user = await collection.findOne({
+  const userDoc = await collection.findOne({
     _id: currentRefreshToken._id,
     'services.resume.refreshTokens.token': hashedToken,
   });
 
-  if (!user) {
+  if (!userDoc) {
     throw new UserInputError('Incorrect token provided.');
   }
 
@@ -46,6 +46,11 @@ async function refreshToken(
   // fail if the token is less than 5 seconds valid.
   if (expiresIn < 5) {
     throw new UserInputError('Incorrect token provided.');
+  }
+
+  let user = cleanUser(userDoc);
+  if (typeof onLogin === 'function') {
+    user = (await onLogin(user)) || user;
   }
 
   const newTokens = createTokens(user, {

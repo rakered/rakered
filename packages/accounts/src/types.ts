@@ -15,6 +15,7 @@ export interface Context {
   collection: Collection<UserDocument>;
   email: EmailSettings;
   urls: TokenUrls;
+  onLogin?: (user: User) => Promise<User | void>;
 }
 
 export interface EmailOptions {

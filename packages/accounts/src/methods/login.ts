@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { getPasswordString, SHA256 } from '../lib/password';
 import { Context, AuthTokenResult, Password } from '../types';
 import { normalizeEmail } from '../lib/email';
-import { createTokens } from '../lib/jwt';
+import { cleanUser, createTokens } from '../lib/jwt';
 import { normalizeUsername } from '../lib/username';
 import { UserInputError } from '@rakered/errors';
 import { MAX_ACTIVE_REFRESH_TOKENS } from '../lib/constants';
@@ -16,7 +16,7 @@ export type LoginDocument =
 
 async function login(
   credentials: LoginDocument,
-  { collection }: Context,
+  { collection, onLogin }: Context,
 ): Promise<AuthTokenResult> {
   // only one of them can be provided
   const identity =
@@ -35,13 +35,13 @@ async function login(
     ? { 'emails.address': normalizeEmail(identity) }
     : { handle: normalizeUsername(identity) };
 
-  const user = await collection.findOne(selector);
+  const userDoc = await collection.findOne(selector);
 
-  if (!user) {
+  if (!userDoc) {
     throw new UserInputError('Incorrect credentials provided.');
   }
 
-  const hashedPassword = user.services.password;
+  const hashedPassword = userDoc.services.password;
   const valid = hashedPassword?.argon
     ? await argon.verify(hashedPassword.argon, passwordString)
     : hashedPassword?.bcrypt
@@ -50,6 +50,11 @@ async function login(
 
   if (!valid) {
     throw new UserInputError('Incorrect credentials provided.');
+  }
+
+  let user = cleanUser(userDoc);
+  if (typeof onLogin === 'function') {
+    user = (await onLogin(user)) || user;
   }
 
   const newTokens = createTokens(user);

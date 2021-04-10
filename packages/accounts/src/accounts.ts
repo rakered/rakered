@@ -61,6 +61,7 @@ export type Options = {
   collection?: Collection<any> | string;
   email?: EmailSettings;
   urls?: TokenUrls;
+  onLogin?: Context['onLogin'];
 };
 
 function createUrlResolvers(siteUrl): TokenUrls {
@@ -140,6 +141,7 @@ export function init(options: Options = defaultOptions): Accounts {
     collection,
     email: emailOptions,
     urls: urlOptions,
+    onLogin: options.onLogin,
   };
 
   return {

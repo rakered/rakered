@@ -23,8 +23,6 @@ There are various options available. In development mode, this library does not 
 
 ### Environment Variables
 
-Both `username` as well as `email` are optional, but one of those must be provided.
-
 - **MAIL_URL** _String_
 
   The smtp url for the mail server to use.

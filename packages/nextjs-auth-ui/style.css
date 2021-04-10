@@ -1,0 +1,56 @@
+[data-rakered-button] {
+  /* make it a grid so we can stack the child states */
+  display: inline-grid;
+  grid-template: 1fr / 1fr;
+  transition: all 100ms ease-in-out;
+}
+
+[data-rakered-button] > * {
+  /* stack all states on top of each other */
+  grid-area: 1/1;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  transition: opacity 300ms ease-in-out;
+  position: relative;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+/* hide when hidden, ofc */
+[data-rakered-button] > [hidden] {
+  opacity: 0;
+  transition-delay: 0ms;
+}
+
+/* this creates the sliding effect */
+[data-rakered-slider] {
+  transform: translateX(50%);
+  transition: transform 300ms ease-in-out;
+  transition-delay: 0ms;
+}
+
+/* slide to the center when entering */
+[data-rakered-direction='enter'] [data-rakered-slider] {
+  transform: translateX(0%);
+}
+
+/* slide to the left when exiting */
+[data-rakered-direction='exit'] [data-rakered-slider] {
+  transform: translateX(-50%);
+}
+
+/* put the icon inside the right padding so text stays
+   horizontally centered (looks better on big buttons)
+   and for smaller buttons you can add 2rem of padding
+   to the right of the text if it feels off balance */
+[data-rakered-icon] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}

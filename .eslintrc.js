@@ -22,7 +22,7 @@ module.exports = {
 
   overrides: [
     {
-      files: ['**/*.test.{ts,tsx}', '**/scripts/*.{ts,tsx}'],
+      files: ['**/*.test.{ts,tsx}', '**/scripts/*.{ts,tsx}', '*.config.js'],
       rules: {
         '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/no-var-requires': 'off',

@@ -52,7 +52,7 @@ export declare type NextApiHandler<T = any> = (
 
 export interface Handlers {
   login: NextApiHandler;
-  signup: NextApiHandler;
+  createAccount: NextApiHandler;
   logout: NextApiHandler;
   resetPassword: NextApiHandler;
   requestPasswordReset: NextApiHandler;

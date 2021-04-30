@@ -90,3 +90,14 @@ export async function send(options: SendOptions): Promise<SentMessageInfo> {
 
   return devModeSend(options);
 }
+
+export async function disconnect() {
+  for (const url of _transportCache.keys()) {
+    const transport = _transportCache.get(url);
+    _transportCache.delete(url);
+
+    if (transport && typeof transport.close === 'function') {
+      transport.close();
+    }
+  }
+}

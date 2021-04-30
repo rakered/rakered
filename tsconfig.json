@@ -21,7 +21,6 @@
     { "path": "packages/email" },
     { "path": "packages/errors" },
     { "path": "packages/hash" },
-    { "path": "packages/mongo" },
-    { "path": "packages/react" }
+    { "path": "packages/mongo" }
   ]
 }

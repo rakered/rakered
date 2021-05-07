@@ -4,7 +4,6 @@ import http from 'http';
 import { apiResolver } from 'next/dist/next-server/server/api-utils';
 import nodeFetch from 'node-fetch';
 import listen from 'test-listen';
-import { hash } from '@rakered/hash';
 
 import { handleAuth } from './auth';
 
@@ -145,7 +144,6 @@ test('can logout', async () => {
   });
 
   const cookies = loginResponse.body;
-  const hashedToken = hash(loginResponse.body.refreshToken).digest;
 
   // Cookie is not automatically included in the fetch, so pass it in manually
   const { status, headers, body } = await post('/api/auth/logout', {}, cookies);

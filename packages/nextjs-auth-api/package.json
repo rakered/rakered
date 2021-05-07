@@ -1,6 +1,6 @@
 {
   "name": "@rakered/nextjs-auth-api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "api sdk for using @rakered/accounts with nextjs.",
   "keywords": [
     "nodejs",
@@ -27,7 +27,7 @@
     "lib"
   ],
   "dependencies": {
-    "@rakered/accounts": "^1.5.0",
+    "@rakered/accounts": "^1.6.0",
     "cookie": "^0.4.1"
   },
   "devDependencies": {

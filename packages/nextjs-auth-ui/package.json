@@ -1,6 +1,6 @@
 {
   "name": "@rakered/nextjs-auth-ui",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "ui for using @rakered/accounts with nextjs.",
   "keywords": [
     "nodejs",
@@ -28,7 +28,7 @@
     "style.css"
   ],
   "dependencies": {
-    "@rakered/accounts": "^1.4.0",
+    "@rakered/accounts": "^1.6.0",
     "@rakered/forms": "^1.5.1",
     "clsx": "^1.1.1",
     "zustand": "^3.3.1"

@@ -1,7 +1,7 @@
 import argon from 'argon2';
 import bcrypt from 'bcryptjs';
 import { getPasswordString, SHA256 } from '../lib/password';
-import { Context, AuthTokenResult, Password } from '../types';
+import { Context, AuthTokenResult, Password, UserDocument } from '../types';
 import { normalizeEmail } from '../lib/email';
 import { cleanUser, createTokens } from '../lib/jwt';
 import { normalizeUsername } from '../lib/username';
@@ -13,6 +13,17 @@ export type LoginDocument =
   | { identity: string; password: Password }
   | { email: string; password: Password }
   | { username: string; password: Password };
+
+async function verifyPassword(
+  hash: UserDocument['services']['password'],
+  plain: string,
+): Promise<boolean> {
+  return hash?.argon
+    ? await argon.verify(hash.argon, plain)
+    : hash?.bcrypt
+    ? await bcrypt.compare(plain, hash.bcrypt)
+    : false;
+}
 
 async function login(
   credentials: LoginDocument,
@@ -42,11 +53,14 @@ async function login(
   }
 
   const hashedPassword = userDoc.services.password;
-  const valid = hashedPassword?.argon
-    ? await argon.verify(hashedPassword.argon, passwordString)
-    : hashedPassword?.bcrypt
-    ? await bcrypt.compare(passwordString, hashedPassword.bcrypt)
-    : false;
+  let valid = await verifyPassword(hashedPassword, passwordString);
+
+  // Legacy fallback for passwords that haven't been hashed on the client. No
+  // worries, they are stored as hashes. They are just not hashed before the
+  // client sends them to the server. Which unfortunately is quite common.
+  if (!valid && typeof credentials.password === 'string') {
+    valid = await verifyPassword(hashedPassword, credentials.password);
+  }
 
   if (!valid) {
     throw new UserInputError('Incorrect credentials provided.');

@@ -1,7 +1,7 @@
 import { Password } from '@rakered/accounts/lib/types';
 import { handleSubmit } from '@rakered/forms';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 
 import Field from '../shared/field';
 import Input from '../shared/input';
@@ -21,9 +21,15 @@ export type LoginFormProps = {
   onLogin?: ({ redirectTo }: { redirectTo: string }) => Promise<void>;
 };
 
+function exceptionToError(ex) {
+  return {
+    error: ex.message,
+  };
+}
 export function LoginForm({ onLogin }: LoginFormProps): ReactElement {
   const router = useRouter();
   const redirect = router.query.redirect as string;
+  const formRef = useRef<HTMLFormElement>(null);
 
   const login = useStore((state) => state.login);
 
@@ -38,7 +44,17 @@ export function LoginForm({ onLogin }: LoginFormProps): ReactElement {
   const transition = async () => {
     switch (state.status) {
       case 'loading': {
-        const res = await login(state.values);
+        let res = await login(state.values).catch(exceptionToError);
+
+        // The first login attempt uses a hashed password. It is possible that
+        // the server doesn't support this, hence the second attempt
+        if ('error' in res) {
+          res = await login({
+            email: state.values.email,
+            password: formRef.current!.password.value,
+          }).catch(exceptionToError);
+        }
+
         if ('error' in res) {
           setState({ ...state, status: 'error', error: res.error });
         } else {
@@ -62,10 +78,15 @@ export function LoginForm({ onLogin }: LoginFormProps): ReactElement {
   }, [state.status]);
 
   return (
-    <form method="POST" onSubmit={onSubmit} className="w-full space-y-6">
+    <form
+      method="POST"
+      onSubmit={onSubmit}
+      className="w-full space-y-6"
+      ref={formRef}
+    >
       <Field label="Email" error={getError(state)}>
         <Input
-          invalid={status === 'error'}
+          invalid={state.status === 'error'}
           tabIndex={1}
           type="text"
           name="email"

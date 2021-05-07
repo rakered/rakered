@@ -1,6 +1,6 @@
 {
   "name": "@rakered/nextjs-auth-ui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "ui for using @rakered/accounts with nextjs.",
   "keywords": [
     "nodejs",

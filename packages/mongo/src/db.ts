@@ -1,14 +1,23 @@
 // NOTE: Import order matters!, import the prototype extensions before MongoClient
 import './collection';
 
-import type { Db as MongoDb, MongoClientOptions } from 'mongodb';
-import { MongoClient } from 'mongodb';
+import type {
+  Db as MongoDb,
+  MongoClientOptions,
+  WithTransactionCallback,
+} from 'mongodb';
+import { MongoClient, TransactionOptions } from 'mongodb';
 import picoid from 'picoid';
 import { Collection, getCollection } from './collection';
 
 export type Db = MongoDb & {
   connect: () => Promise<void>;
   disconnect: (force?: boolean) => Promise<void>;
+  transaction: <T>(
+    fn: WithTransactionCallback<T>,
+    options?: TransactionOptions,
+  ) => Promise<void>;
+  client: MongoClient;
 } & Record<string, Collection<any>>;
 
 export type Options = MongoClientOptions & {
@@ -73,6 +82,24 @@ export function create<TDb extends Db>(
     await client.close(force);
   }
 
+  async function transaction<T>(
+    fn: WithTransactionCallback<T>,
+    options?: TransactionOptions,
+  ): Promise<void> {
+    await connect();
+
+    if (!client) {
+      throw new Error('Client is undefined o.O');
+    }
+
+    const session = client.startSession();
+    try {
+      return await session.withTransaction(() => fn(session), options);
+    } finally {
+      await session.endSession();
+    }
+  }
+
   if (options?.autoDisconnect !== false) {
     process.on('exit', () => {
       disconnect(true).catch(() => undefined);
@@ -91,6 +118,10 @@ export function create<TDb extends Db>(
         if (db?.hasOwnProperty(name)) {
           /* istanbul ignore next */
           return db[name];
+        }
+
+        if (name === 'transaction') {
+          return transaction;
         }
 
         if (name === 'connect') {

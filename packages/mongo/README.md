@@ -139,6 +139,28 @@ This method now returns a promise, while it's a sync method in the native driver
 const bulk = await db.users.initializeUnorderedBulkOp();
 ```
 
+### `db.transaction`
+
+Run operations inside a transaction.
+
+```js
+await db.transaction(async (session) => {
+  const amount = 1000;
+
+  await db.accounts.updateOne(
+    { name: 'sender' },
+    { $inc: { balance: -amount } },
+    { session },
+  );
+
+  await db.accounts.updateOne(
+    { name: 'receiver' },
+    { $inc: { balance: amount } },
+    { session },
+  );
+});
+```
+
 ## Good to knows
 
 This library wraps the native mongo driver, and adds a few restrictions to it. Let's talk about those.

@@ -13,8 +13,8 @@ import { Collection, getCollection } from './collection';
 export type Db = MongoDb & {
   connect: () => Promise<void>;
   disconnect: (force?: boolean) => Promise<void>;
-  transaction: <T>(
-    fn: WithTransactionCallback<T>,
+  transaction: (
+    fn: WithTransactionCallback,
     options?: TransactionOptions,
   ) => Promise<void>;
   client: MongoClient;
@@ -82,8 +82,8 @@ export function create<TDb extends Db>(
     await client.close(force);
   }
 
-  async function transaction<T>(
-    fn: WithTransactionCallback<T>,
+  async function transaction(
+    fn: WithTransactionCallback,
     options?: TransactionOptions,
   ): Promise<void> {
     await connect();

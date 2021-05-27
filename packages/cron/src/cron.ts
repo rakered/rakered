@@ -292,5 +292,5 @@ export class Runner {
   }
 }
 
-// const cron = new Runner();
-// export default cron;
+const cron = new Runner();
+export default cron;

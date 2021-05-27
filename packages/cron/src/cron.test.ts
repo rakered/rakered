@@ -1,4 +1,4 @@
-import { JobHandler, Runner, RunnerOptions } from './cron';
+import cron, { JobHandler, Runner, RunnerOptions } from './cron';
 import { Job } from './db';
 import db from '@rakered/mongo';
 import MockDate from 'mockdate';
@@ -53,6 +53,8 @@ const _error = console.error;
 beforeAll(async () => {
   await db.jobs.deleteMany({});
   MockDate.set(START_TIME);
+
+  await cron.stop();
 });
 
 beforeEach(() => {

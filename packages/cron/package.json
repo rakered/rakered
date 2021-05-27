@@ -31,10 +31,9 @@
   ],
   "dependencies": {
     "@breejs/later": "^4.0.2",
-    "@rakered/errors": "^1.0.0",
     "@rakered/mongo": "^1.4.2",
     "mongodb": "^3.6.8",
-    "picoid": "^1.1.0"
+    "signal-exit": "^3.0.3"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

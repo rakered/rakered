@@ -3,7 +3,7 @@
   "description": "The open source components from rake.red",
   "scripts": {
     "clean": "rimraf \"packages/**/dist\" \"packages/**/*.tsbuildinfo\"",
-    "start:db": "mongod --dbpath ../.db",
+    "start:db": "mongod --dbpath ../.db --replSet rs0",
     "test": "lerna run test",
     "build": "lerna run build",
     "prepare": "npm run clean && npm run build",
@@ -12,6 +12,7 @@
     "ci:tsc": "tsc --noEmit --project ./tsconfig.json"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
     "eslint": "^7.25.0",

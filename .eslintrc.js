@@ -11,6 +11,7 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     'prefer-const': [
       'error',
       {
@@ -24,7 +25,6 @@ module.exports = {
     {
       files: ['**/*.test.{ts,tsx}', '**/scripts/*.{ts,tsx}', '*.config.js'],
       rules: {
-        '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/no-var-requires': 'off',
       },
     },

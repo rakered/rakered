@@ -1,6 +1,6 @@
 {
   "name": "@rakered/cron",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Lightweight job scheduling for Node.js",
   "keywords": [
     "nodejs",

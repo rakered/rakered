@@ -1,3 +1,2 @@
-import { Runner } from './cron';
-
 export * from './cron';
+export { default } from './cron';

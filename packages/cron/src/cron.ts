@@ -283,6 +283,29 @@ export class Runner {
     return { _id: insertedId, ...doc } as Job;
   }
 
+  async scheduleMany(name: Job['name'], data: Job['data'][]): Promise<Job[]> {
+    if (!data.length) {
+      return [];
+    }
+
+    log('schedule %s for %d datasets', name, data.length);
+
+    const docs = data.map((data) =>
+      createJob({
+        schedule: 'once',
+        name,
+        data,
+      }),
+    );
+
+    const { insertedIds } = await this.#db.jobs.insertMany(docs as Job[]);
+    for (const [idx, id] of Object.entries(insertedIds)) {
+      docs[idx]._id = id;
+    }
+
+    return docs as Job[];
+  }
+
   /**
    * Reschedule a failed job. This is handy for one-off jobs, but as recurring jobs
    * already run on a schedule, it's unlikely to be used for those.

@@ -60,6 +60,27 @@ cron.schedule('every 5 minutes', 'get-coffee', (job) => {
 });
 ```
 
+### `scheduleMany(name, data[])`
+
+This method is used to schedule multiple jobs of the same type, to run as soon as possible. The job will be run once for each dataset. This method can be used to easily distribute load across various job runners or even servers.
+
+- **name** _String_
+
+  The name of the job that should be run.
+
+- **data** _Record<string, unknown>[]_
+
+  The datasets to schedule this job for. There will be created a single job, for each dataset.
+
+```js
+import cron from '@rakered/cron';
+
+cron.scheduleMany('send-daily-digest', [
+  { email: 'person-one@example.com' },
+  { email: 'person-two@example.com' },
+]);
+```
+
 ### `reschedule(job)`
 
 This method is used to reschedule failed jobs. Note that recurring jobs already run on a schedule, so reschedule those with caution. Jobs that are run once, can safely be rescheduled, but make sure that the error is something that can be overcome by time. Don't expect different outcomes from trying the same thing twice.

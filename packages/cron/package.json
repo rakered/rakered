@@ -34,6 +34,7 @@
     "@rakered/mongo": "^1.4.2",
     "mongodb": "^3.6.8",
     "signal-exit": "^3.0.3"
+    "debug": "^4.3.1",
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

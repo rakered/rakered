@@ -2,6 +2,7 @@ import later from '@breejs/later';
 import { getDb, Job, JobsDb } from './db';
 import onExit from 'signal-exit';
 import { FilterQuery } from 'mongodb';
+import log from './log';
 
 const IS_TEST_ENV = process.env.NODE_ENV === 'test';
 
@@ -77,10 +78,12 @@ export class Runner {
     this.#names = options.name ? [options.name] : [];
 
     // graceful shutdown on kill signal
-    onExit(this.stop);
+    onExit(() => {
+      this.stop();
+    });
 
     if (options.autoStart !== false) {
-      this.run();
+      this.start();
     }
   }
 
@@ -174,6 +177,7 @@ export class Runner {
       throw new Error(`There is no handler registered for ${job.name}`);
     }
 
+    log('handle %s', job.name);
     return handler(job);
   }
 
@@ -200,15 +204,19 @@ export class Runner {
       return;
     }
 
+    log('starting');
     // reconnect to the database, as `stop` disconnects
     this.#db = getDb();
     this.run();
+    log('started');
   }
 
   /**
    * Stop the job runner
    */
   async stop() {
+    log('stopping');
+
     if (this.#status === 'active') {
       this.#status = 'stopping';
 
@@ -222,6 +230,7 @@ export class Runner {
     // can result in "Jest open-handle errors". I don't get what's keeping this open
     await this.#db.disconnect();
     this.#status = 'idle';
+    log('stopped');
   }
 
   /**
@@ -248,6 +257,8 @@ export class Runner {
     name: Job['name'],
     data?: Job['data'] | JobHandler,
   ): Promise<Job> {
+    log('schedule %s to run at %s', name, schedule);
+
     const doc = createJob({
       schedule,
       name,

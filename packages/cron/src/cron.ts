@@ -1,6 +1,6 @@
 import later from '@breejs/later';
 import { getDb, Job, JobsDb } from './db';
-import onExit from 'signal-exit';
+import onExit from 'exit-hook';
 import { FilterQuery } from 'mongodb';
 import log from './log';
 
@@ -77,10 +77,7 @@ export class Runner {
   constructor(options: RunnerOptions = {}) {
     this.#names = options.name ? [options.name] : [];
 
-    // graceful shutdown on kill signal
-    onExit(() => {
-      this.stop();
-    });
+    onExit(() => this.stop());
 
     if (options.autoStart !== false) {
       this.start();

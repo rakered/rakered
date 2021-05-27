@@ -32,9 +32,9 @@
   "dependencies": {
     "@breejs/later": "^4.0.2",
     "@rakered/mongo": "^1.4.2",
-    "mongodb": "^3.6.8",
-    "signal-exit": "^3.0.3"
     "debug": "^4.3.1",
+    "exit-hook": "github:smeijer-forks/exit-hook",
+    "mongodb": "^3.6.8"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

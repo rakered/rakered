@@ -31,7 +31,7 @@
   ],
   "dependencies": {
     "@breejs/later": "^4.0.2",
-    "@rakered/mongo": "^1.4.2",
+    "@rakered/mongo": "^1.5.1",
     "debug": "^4.3.1",
     "exit-hook": "github:smeijer-forks/exit-hook",
     "mongodb": "^3.6.8"

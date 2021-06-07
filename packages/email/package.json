@@ -1,6 +1,6 @@
 {
   "name": "@rakered/email",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Compose emails using react and send them with nodemailer",
   "keywords": [
     "nodejs",

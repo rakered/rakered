@@ -163,7 +163,7 @@ test('can start a stopped runner', async () => {
   const runner = await getRunner();
   await runner.stop();
 
-  expect(runner.schedule('once', 'once')).rejects.toThrow(
+  await expect(runner.schedule('once', 'once')).rejects.toThrow(
     'Topology is closed, please connect',
   );
 
@@ -185,11 +185,11 @@ test('can start a stopped runner', async () => {
 test('throws error when incorrect schedules are given', async () => {
   const runner = await getRunner();
 
-  expect(runner.schedule('twice', 'twice?')).rejects.toThrow(
+  await expect(runner.schedule('twice', 'twice?')).rejects.toThrow(
     'Invalid schedule provided: twice',
   );
 
-  expect(
+  await expect(
     runner.schedule('every other week day', 'invalid cron'),
   ).rejects.toThrow('Invalid schedule provided: every other week day');
 

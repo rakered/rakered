@@ -29,6 +29,7 @@
     "lib"
   ],
   "dependencies": {
+    "exit-hook": "github:smeijer-forks/exit-hook",
     "nodemailer": "^6.4.17",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"

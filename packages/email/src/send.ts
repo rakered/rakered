@@ -5,6 +5,7 @@ import nodemailer, {
 } from 'nodemailer';
 import Composer from 'nodemailer/lib/mail-composer';
 import { URL } from 'url';
+import onExit from 'exit-hook';
 
 function createTransport(mailUrl: string): Transporter {
   const url = new URL(mailUrl);
@@ -101,3 +102,6 @@ export async function disconnect() {
     }
   }
 }
+
+// graceful shutdown
+onExit(() => disconnect());

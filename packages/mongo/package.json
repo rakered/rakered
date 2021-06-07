@@ -31,7 +31,8 @@
   "dependencies": {
     "@rakered/errors": "^1.0.0",
     "mongodb": "^3.6.8",
-    "picoid": "^1.1.2"
+    "picoid": "^1.1.2",
+    "saslprep": "^1.0.3"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

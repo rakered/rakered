@@ -1,6 +1,6 @@
 {
   "name": "@rakered/mongo",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "A tiny but elegant wrapper around the native mongodb driver for Node.js, removing boilerplate and fixing id generation.",
   "keywords": [
     "nodejs",

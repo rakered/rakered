@@ -240,3 +240,42 @@ test('bulkWrite.update is augmented', async () => {
     expect(typeof _id).toEqual('string');
   });
 });
+
+test('supports transactions', async () => {
+  const { insertedId } = await db.testCol.insertOne({
+    name: 'transaction test',
+    count: 0,
+  });
+
+  // first failing transaction
+  await expect(
+    db.transaction(async (session) => {
+      await db.testCol.updateOne(
+        { _id: insertedId },
+        { $inc: { count: 1 } },
+        { session },
+      );
+
+      throw new Error('do not commit!');
+    }),
+  ).rejects.toThrow('do not commit!');
+
+  // now a succeeding transaction
+  await expect(
+    db.transaction(async (session) => {
+      await db.testCol.updateOne(
+        { _id: insertedId },
+        { $inc: { count: 1 } },
+        { session },
+      );
+    }),
+  ).resolves.toBeTruthy();
+
+  // validate that the count was only increased once
+  await expect(db.testCol.findOne({ _id: insertedId })).resolves.toMatchPartial(
+    {
+      name: 'transaction test',
+      count: 1,
+    },
+  );
+});

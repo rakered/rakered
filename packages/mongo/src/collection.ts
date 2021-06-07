@@ -1,5 +1,6 @@
 import Collection from 'mongodb/lib/collection';
 import { BulkOperationBase } from 'mongodb/lib/bulk/common';
+
 import {
   ClientSession,
   Collection as MongoCollection,
@@ -16,7 +17,6 @@ import {
   Connection,
   ConnectionOptions,
   getConnection,
-  PaginationArgs,
 } from './connection/connection';
 
 interface ListIndexOptions {
@@ -227,6 +227,24 @@ Collection.prototype.updateMany = async function updateMany(
   }
 
   return _updateMany.apply(this, [filter, update, options]);
+};
+
+const _findOneAndUpdate = Collection.prototype.findOneAndUpdate;
+Collection.prototype.findOneAndUpdate = async function findOneAndUpdate(
+  filter,
+  update,
+  options,
+) {
+  if (forceServerObjectId(this)) {
+    return _findOneAndUpdate.apply(this, [filter, update, options]);
+  }
+
+  if (options.upsert && !filter._id) {
+    update.$setOnInsert = update.$setOnInsert || {};
+    update.$setOnInsert._id = update.$setOnInsert._id || createPk(this);
+  }
+
+  return _findOneAndUpdate.apply(this, [filter, update, options]);
 };
 
 const _bulkInsert = BulkOperationBase.prototype.insert;

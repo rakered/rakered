@@ -159,7 +159,19 @@ test('updateMany.upsert is augmented', async () => {
   );
 
   expect(typeof upsertedId._id).toEqual('string');
-  // expect(modifiedCount).toEqual(1);
+});
+
+test('findOneAndUpdate is augmented', async () => {
+  db.testCol.pkPrefix = 'job_';
+
+  const { value } = await db.testCol.findOneAndUpdate(
+    { name: 'job' },
+    { $set: { started: new Date() } },
+    { upsert: true, returnDocument: 'after' },
+  );
+
+  expect(value._id).toMatch(/^job_/);
+  expect(typeof value._id).toEqual('string');
 });
 
 test('bulk insert is augmented', async () => {

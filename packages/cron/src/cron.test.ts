@@ -51,13 +51,12 @@ async function getRunner(options?: RunnerOptions) {
 const _error = console.error;
 
 beforeAll(async () => {
-  await db.jobs.deleteMany({});
   MockDate.set(START_TIME);
-
   await cron.stop();
 });
 
-beforeEach(() => {
+beforeEach(async () => {
+  await db.jobs.deleteMany({});
   console.error = jest.fn();
 });
 
@@ -67,6 +66,7 @@ afterEach(() => {
 
 afterAll(async () => {
   await db.disconnect();
+  await cron.stop();
   console.error = _error;
 });
 
@@ -192,6 +192,22 @@ test('throws error when incorrect schedules are given', async () => {
   await expect(
     runner.schedule('every other week day', 'invalid cron'),
   ).rejects.toThrow('Invalid schedule provided: every other week day');
+
+  await runner.stop();
+});
+
+test('can change job schedules in between restarts', async () => {
+  const runner = await getRunner({ autoStart: false });
+
+  await runner.schedule('*/5 * * * *', 'main job');
+  const jobs = await db.jobs.find();
+  expect(jobs).toHaveLength(1);
+  expect(jobs[0]).toHaveProperty('schedule', '*/5 * * * *');
+
+  await runner.schedule('*/10 * * * *', 'main job');
+  const jobs2 = await db.jobs.find();
+  expect(jobs2).toHaveLength(1);
+  expect(jobs2[0]).toHaveProperty('schedule', '*/10 * * * *');
 
   await runner.stop();
 });

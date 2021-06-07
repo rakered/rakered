@@ -268,7 +268,7 @@ export class Runner {
 
     if (doc.schedule) {
       const { value } = await this.#db.jobs.findOneAndUpdate(
-        { name },
+        { name, started: { $exists: false } },
         { $set: doc },
         { upsert: true, returnDocument: 'after' },
       );

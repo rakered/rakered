@@ -24,7 +24,7 @@ export type Options = MongoClientOptions & {
   autoDisconnect?: boolean;
 };
 
-export function create<TDb extends Db>(
+export function create<TDb extends Db = Db>(
   uri: string = process.env.MONGO_URL || 'mongodb://localhost:27017',
   options?: Options,
 ): TDb {

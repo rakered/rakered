@@ -148,6 +148,3 @@ export async function connect(uri?: string, options?: Options): Promise<Db> {
   await db.connect();
   return db;
 }
-
-const db = create();
-export default db;

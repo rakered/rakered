@@ -1,6 +1,7 @@
 {
   "name": "rakered",
   "description": "The open source components from rake.red",
+  "homepage": "https://rake.red",
   "private": true,
   "scripts": {
     "clean": "rimraf \"packages/**/dist\" \"packages/**/*.tsbuildinfo\"",

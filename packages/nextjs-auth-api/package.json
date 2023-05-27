@@ -1,7 +1,7 @@
 {
   "name": "@rakered/nextjs-auth-api",
   "version": "1.0.2",
-  "description": "api sdk for using @rakered/accounts with nextjs.",
+  "description": "API sdk for using @rakered/accounts with Next.js. Self hosted accounts with a breeze.",
   "keywords": [
     "nodejs",
     "errors"

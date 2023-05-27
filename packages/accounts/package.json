@@ -1,7 +1,7 @@
 {
   "name": "@rakered/accounts",
   "version": "1.6.0",
-  "description": "An account package for managing user accounts in mongodb.",
+  "description": "An account package for managing user accounts in mongodb, including registration & recovery emails.",
   "keywords": [
     "nodejs",
     "mongodb"

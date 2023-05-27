@@ -1,7 +1,7 @@
 {
   "name": "@rakered/swift",
   "version": "1.0.0",
-  "description": "A lib to manage files on OpenStack Swift with ease",
+  "description": "A lib to manage files on OpenStack Swift with ease. Upload, download, and delete.",
   "keywords": [
     "openstack",
     "swift",

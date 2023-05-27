@@ -4,7 +4,8 @@
   "description": "API sdk for using @rakered/accounts with Next.js. Self hosted accounts with a breeze.",
   "keywords": [
     "nodejs",
-    "errors"
+    "auth",
+    "nextjs"
   ],
   "main": "./lib/index.js",
   "source": "./src/index.ts",

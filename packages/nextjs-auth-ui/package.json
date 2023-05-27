@@ -3,8 +3,9 @@
   "version": "1.1.1",
   "description": "UI for using @rakered/accounts with Next.js. Your own login & registration forms in a sec.",
   "keywords": [
-    "nodejs",
-    "errors"
+    "browser",
+    "auth",
+    "nextjs"
   ],
   "main": "./lib/index.js",
   "source": "./src/index.ts",

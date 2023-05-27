@@ -3,8 +3,7 @@
   "version": "1.5.1",
   "description": "Tiny lib to deal with form submissions and structured FormData.",
   "keywords": [
-    "forms",
-    "javascript"
+    "forms", "browser"
   ],
   "main": "./lib/index.js",
   "source": "./src/index.ts",
